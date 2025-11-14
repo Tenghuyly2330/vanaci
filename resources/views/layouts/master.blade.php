@@ -21,6 +21,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -32,10 +33,8 @@
         .prose ul {
             list-style-type: disc;
             padding-left: 1.25rem;
-            font-size: 16px;
+            font-size: 14px;
         }
-
-        .prose ul li::marker {}
 
         .prose ol {
             list-style-type: decimal;
@@ -43,21 +42,21 @@
             font-size: 14px;
         }
 
-        .prose p span {
+        .prose p {
             font-size: 14px;
         }
 
         .prose strong {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         @media (max-width: 639px) {
 
             .prose strong {
-                font-size: 14px;
+                font-size: 12px;
             }
 
-            .prose p span {
+            .prose p {
                 font-size: 12px;
             }
 
@@ -99,7 +98,7 @@
                 items: JSON.parse(localStorage.getItem('cart_items') || '[]'),
 
                 get count() {
-                    return this.items.reduce((sum, i) => sum + i.qty, 0);
+                    return this.items.reduce((sum, i) => sum + (i.qty || 0), 0);
                 },
 
                 get total() {
@@ -107,11 +106,13 @@
                         const price = item.discount && item.discount > 0 ?
                             item.price * (1 - item.discount / 100) :
                             item.price;
-                        return sum + price * item.qty;
+                        return sum + price * (item.qty || 0);
                     }, 0).toFixed(2);
                 },
 
                 add(item) {
+                    // Ensure qty is a number and at least 1
+                    const qtyToAdd = Number(item.qty) && Number(item.qty) > 0 ? Number(item.qty) : 1;
                     const existing = this.items.find(i =>
                         i.name === item.name &&
                         i.size === item.size &&
@@ -119,38 +120,32 @@
                     );
 
                     if (existing) {
-                        existing.qty++;
-                        // this.toast(`Increased quantity: ${item.name} (${item.size})`);
+                        existing.qty = (existing.qty || 0) + qtyToAdd;
                         this.toast(`Increased quantity: ${item.name}`);
                     } else {
                         this.items.push({
                             ...item,
-                            qty: 1
+                            qty: qtyToAdd
                         });
-                        // this.toast(`${item.name} (${item.size}) added to cart`);
                         this.toast(`${item.name} added to cart`);
                     }
                     this.save();
                 },
 
                 increase(index) {
-                    this.items[index].qty++;
+                    this.items[index].qty = (this.items[index].qty || 0) + 1;
                     this.save();
                     this.toast(`Increased quantity: ${this.items[index].name}`);
-                    // this.toast(`Increased quantity: ${this.items[index].name} (${this.items[index].size})`);
                 },
 
                 decrease(index) {
                     if (this.items[index].qty > 1) {
                         this.items[index].qty--;
-                        this.toast(
-                            // `Decreased quantity: ${this.items[index].name} (${this.items[index].size})`);
-                            `Decreased quantity: ${this.items[index].name}`);
+                        this.toast(`Decreased quantity: ${this.items[index].name}`);
                     } else {
                         const removedItem = this.items[index];
                         this.items.splice(index, 1);
                         this.toast(`Removed: ${removedItem.name}`);
-                        // this.toast(`Removed: ${removedItem.name} (${removedItem.size})`);
                     }
                     this.save();
                 },
@@ -160,7 +155,6 @@
                     this.items.splice(index, 1);
                     this.save();
                     this.toast(`Removed: ${removedItem.name}`);
-                    // this.toast(`Removed: ${removedItem.name} (${removedItem.size})`);
                 },
 
                 save() {
@@ -202,8 +196,7 @@
         });
     </script>
 
+
 </body>
 
 </html>
-
-

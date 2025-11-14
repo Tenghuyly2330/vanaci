@@ -2,21 +2,24 @@
 
 @section('content')
     <!-- Banner Section -->
-    <section class="relative h-screen flex items-center justify-center text-center">
+    <section class="relative h-screen flex lg:hidden items-center justify-center text-center">
         <div class="w-full h-full absolute inset-0">
             <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">
         </div>
 
         <div class="text-white z-30">
             <h1 class="text-[40px] font-[200] tracking-widest">
-                {{ $typeName ?? 'New Arrivals' }}
-                @if ($categoryName)
-                    - {{ $categoryName }}
-                @endif
+                <h1 class="text-[40px] uppercase font-[200] tracking-[5px]">
+                    @if ($categoryName)
+                        {{ $categoryName }}
+                    @else
+                        {{ $typeName ?? 'New Arrivals' }}
+                    @endif
+                </h1>
             </h1>
         </div>
     </section>
-    <section class="mb-16">
+    <section class="mb-16 block lg:hidden">
         <div class="grid grid-cols-2 items-stretch gap-2 px-4 py-10">
             @forelse ($items as $item)
                 @php
@@ -56,7 +59,7 @@
                         @endif
                     </a>
 
-                    <div class="flex items-start justify-between p-2 mt-auto border border-gray-300 border-t-0">
+                    <div class="flex items-start justify-between p-2 mt-auto">
                         <div>
                             <div class="h-[20px]">
                                 @if ($item->status)
@@ -157,5 +160,9 @@
                 </p>
             @endforelse
         </div>
+    </section>
+
+    <section class="w-full h-screen hidden lg:flex items-center justify-center text-center">
+        Not Available
     </section>
 @endsection

@@ -31,14 +31,14 @@
                             $firstImage = $firstColor['images'][0] ?? null;
                         @endphp
 
-                        <div class="border rounded overflow-hidden relative bg-white">
+                        <div class="rounded overflow-hidden relative bg-white">
                             <a href="{{ route('item.show', $item->slug) }}" class="relative block">
                                 @if ($firstImage)
                                     <img src="{{ asset($firstImage) }}" alt="{{ $firstColor['name'] ?? 'Color' }}"
-                                        class="w-full h-[300px] object-cover hover:scale-105 transition">
+                                        class="w-full h-[300px] object-cover transition">
                                 @else
                                     <img src="{{ asset('assets/images/default.jpg') }}" alt=""
-                                        class="w-full h-[300px] object-cover hover:scale-105 transition">
+                                        class="w-full h-[300px] object-cover transition">
                                 @endif
 
                                 @if ($item->discount && $item->discount > 0)
@@ -70,7 +70,7 @@
                                                 ${{ number_format($discountedPrice, 2) }}
                                             </span>
                                             {{-- Original price with strikethrough --}}
-                                            <span class="line-through text-gray-500 text-[10px] pl-2">
+                                            <span class="line-through text-gray-500 text-[14px] pl-2">
                                                 ${{ number_format($item->price, 2) }}
                                             </span>
                                         @else

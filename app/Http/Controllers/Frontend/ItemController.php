@@ -57,8 +57,7 @@ class ItemController extends Controller
             }
         }
 
-        // ✅ Get items and decode JSON safely
-        $items = $itemsQuery->take(8)->get()->map(function ($item) {
+        $items = $itemsQuery->get()->map(function ($item) {
 
             $colors = is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true);
             $firstColor = $colors[0] ?? null;
@@ -107,7 +106,7 @@ class ItemController extends Controller
             ->where('category_id', $item->category_id)
             ->where('id', '!=', $item->id)
             ->inRandomOrder()
-            ->take(4)
+            ->take(12)
             ->get()
             ->map(function ($related) {
                 $colors = is_array($related->color) ? $related->color : json_decode($related->color ?? '[]', true);
@@ -131,7 +130,7 @@ class ItemController extends Controller
         // ✅ Optional: show some random products like index
         $items = Item::with('type')
             ->inRandomOrder()
-            ->take(8)
+            ->take(12)
             ->get()
             ->map(function ($random) {
                 $colors = is_array($random->color)

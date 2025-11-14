@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto shadow-md rounded-lg p-6 my-2">
-        <h2 class="text-2xl font-bold text-[#401457] mb-4">Create Item</h2>
+        <h2 class="text-2xl font-bold text-[#613bf1] mb-4">Create Item</h2>
         <form action="{{ route('item_backend.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @component('admin.components.alert')
@@ -20,7 +20,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-[#000]">Discount (%)</label>
+                    <label class="block text-sm font-medium text-[#000]">Discount (Optional (%))</label>
                     <input type="number" name="discount" class="mt-1 block w-full p-2 border rounded-md text-sm"
                         min="0" max="100">
                 </div>
@@ -37,7 +37,7 @@
             <div class="flex items-center gap-2">
                 <input type="hidden" name="status" value="0">
                 <input type="checkbox" name="status" value="1" id="status_new"
-                    class="form-checkbox text-blue-500">
+                    class="form-checkbox text-[#613bf1]">
                 <label for="status_new" class="text-sm font-medium text-gray-700">New</label>
             </div>
 
@@ -46,7 +46,7 @@
             <div>
                 <label class="block text-sm font-medium text-[#000]">Sizes</label>
                 <div id="sizesWrapper" class="space-y-2"></div>
-                <button type="button" id="addSizeBtn" class="bg-blue-500 text-white px-3 py-1 rounded-md mt-2">+ Add
+                <button type="button" id="addSizeBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded-md mt-2">+ Add
                     Size</button>
             </div>
 
@@ -54,7 +54,7 @@
             <div>
                 <label class="block text-sm font-medium text-[#000]">Colors</label>
                 <div id="colorsWrapper" class="space-y-4"></div>
-                <button type="button" id="addColorBtn" class="bg-green-600 text-white px-3 py-1 rounded-md mt-2">+ Add
+                <button type="button" id="addColorBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded-md mt-2">+ Add
                     Color</button>
             </div>
 
@@ -65,7 +65,7 @@
                     @foreach ($types as $type)
                         <label class="flex items-center space-x-2 cursor-pointer">
                             <input type="radio" name="type_id" value="{{ $type->id }}"
-                                class="form-radio text-blue-500 type-radio">
+                                class="form-radio text-[#613bf1] type-radio">
                             <span class="text-gray-800">{{ $type->type }}</span>
                         </label>
                     @endforeach
@@ -80,7 +80,7 @@
                         <label class="flex items-center space-x-2 cursor-pointer category-item"
                             data-type-id="{{ $category->type_id }}">
                             <input type="radio" name="category_id" value="{{ $category->id }}"
-                                class="form-radio text-blue-500">
+                                class="form-radio text-[#613bf1]">
                             <span class="text-gray-800">{{ $category->name }}</span>
                         </label>
                     @endforeach
@@ -90,8 +90,8 @@
             {{-- =============== SUBMIT ACTIONS =============== --}}
             <div class="flex justify-between mt-6">
                 <a href="{{ route('item_backend.index') }}"
-                    class="border border-[#4FC9EE] hover:bg-[#4FC9EE] hover:text-white px-6 py-1 rounded">Back</a>
-                <button type="submit" class="bg-[#4FC9EE] text-white px-6 py-1 rounded">Submit</button>
+                    class="border border-[#613bf1] hover:bg-[#613bf1] hover:text-white px-6 py-1 rounded">Back</a>
+                <button type="submit" class="bg-[#613bf1] text-white px-6 py-1 rounded">Submit</button>
             </div>
         </form>
     </div>

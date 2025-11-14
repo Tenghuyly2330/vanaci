@@ -36,7 +36,7 @@
     }
 </style>
 
-<div class="w-full flex items-center justify-between h-16 text-white px-4">
+<div class="w-full flex lg:hidden items-center justify-between h-16 text-white px-4">
     <a href="{{ route('home') }}">
         <svg width="44" height="20" viewBox="0 0 44 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -97,7 +97,7 @@
         </li>
     </ul>
 </div>
-<nav class="fixed bottom-2 left-0 w-full flex items-center justify-center z-50" x-data="{ open: false }">
+<nav class="fixed bottom-2 left-0 w-full flex lg:hidden items-center justify-center z-50" x-data="{ open: false }">
     <div class="w-full flex items-center justify-between px-6 py-3 rounded-full bg-white mx-2 drop-shadow-2xl">
         <div id="hamburger" class="cursor-pointer p-3 transition-all rounded-full duration-300">
             <!-- Hamburger Icon -->
@@ -175,12 +175,9 @@
                 <div class="relative flex border border-gray-200 rounded-lg p-3 gap-3 bg-white shadow-sm">
                     <!-- Remove Button Top Right -->
                     <button @click="$store.cart.remove(index)"
-                        class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
+                        class="absolute bottom-4 right-2">
+                        <img src="{{ asset('assets/images/icons/trash-red.svg') }}" alt=""
+                                            class="w-6 h-6">
                     </button>
 
                     <!-- Image -->
@@ -192,12 +189,12 @@
                         <div>
                             <div class="flex items-center gap-2 mt-1">
                                 <span x-show="item.size"
-                                    class="border border-gray-300 rounded-sm px-3 py-[2px] font-[600] text-[10px] text-gray-400 uppercase"
+                                    class="border border-[#000] rounded-sm px-3 py-[2px] font-[600] text-[10px] text-[#000] uppercase"
                                     x-text="item.size">
                                 </span>
 
                                 <span
-                                    class="border border-gray-300 rounded-sm px-3 py-[2px] font-[600] text-[10px] text-gray-400 capitalize"
+                                    class="border border-[#000] rounded-sm px-3 py-[2px] font-[600] text-[10px] text-[#000] capitalize"
                                     x-text="item.color"></span>
                                 {{-- <span class="w-6 h-6 rounded border"
                                                 :style="`background-color: ${item.color}`"></span> --}}
@@ -205,16 +202,15 @@
                             <p class="font-semibold text-gray-900 mt-2" x-text="item.name"></p>
 
                             <!-- Price -->
-                            <p class="text-gray-700 mt-1">
+                            <p class="text-[#000] mt-1">
                                 <template x-if="item.discount && item.discount > 0">
-                                    <span class="flex flex-col">
-                                        <span class="line-through text-gray-400 text-[12px]">
-                                            $<span x-text="item.price.toFixed(2)"></span>
-                                        </span>
+                                    <span class="flex items-center gap-2">
                                         <span class="font-semibold text-black">
                                             $<span x-text="(item.price * (1 - item.discount / 100)).toFixed(2)"></span>
                                         </span>
-
+                                        <span class="line-through text-[#000]">
+                                            $<span x-text="item.price.toFixed(2)"></span>
+                                        </span>
                                     </span>
                                 </template>
                                 <template x-if="!item.discount || item.discount <= 0">
@@ -230,13 +226,15 @@
                         <div class="flex items-center border border-gray-300 rounded overflow-hidden w-max mt-2">
                             <button @click="$store.cart.decrease(index)"
                                 class="px-3 py-[2px] text-gray-700 hover:bg-gray-100 border-r border-gray-300">
-                                -
+                                <img src="{{ asset('assets/images/icons/minus.svg') }}" alt=""
+                                            class="w-6 h-6">
                             </button>
                             <span x-text="item.qty"
-                                class="text-[12px] px-4 text-gray-900 font-medium bg-gray-50"></span>
+                                class="text-[14px] px-4 text-gray-900 font-medium bg-gray-50"></span>
                             <button @click="$store.cart.increase(index)"
                                 class="px-3 py-[2px] text-gray-700 hover:bg-gray-100 border-l border-gray-300">
-                                +
+                                <img src="{{ asset('assets/images/icons/plus.svg') }}" alt=""
+                                            class="w-6 h-6">
                             </button>
                         </div>
 
@@ -363,7 +361,7 @@
                 <div class="border rounded overflow-hidden relative">
                     <a :href="`/item/${item.slug}`" class="relative block">
                         <img :src="item.image" :alt="item.name"
-                            class="w-full h-[300px] object-cover hover:scale-105 transition" />
+                            class="w-full h-[300px] object-cover transition" />
                         <template x-if="item.discount > 0">
                             <span class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded"
                                 x-text="item.discount + '%'"></span>
@@ -479,7 +477,7 @@
 
 
 <div id="drawer"
-    class="fixed top-0 left-0 h-full w-full bg-[#000] shadow transform -translate-x-full transition-transform duration-300 z-40">
+    class="fixed top-0 left-0 h-screen overflow-y-auto w-full bg-[#000] shadow transform -translate-x-full transition-transform duration-300 z-40 pb-20">
     <!-- Drawer Header with Close Button -->
     <div class="hidden" x-data="{ open: false }">
         <!-- Drawer Header -->
@@ -599,10 +597,6 @@
             </li>
         @endforeach
     </ul>
-
-    <div class="absolute bottom-5 left-1/2 transform -translate-x-1/2">
-        <p class="text-[20px] uppercase font-[600] tracking-[5px]">vanaci</p>
-    </div>
 </div>
 
 

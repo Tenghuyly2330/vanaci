@@ -3,6 +3,20 @@
     Category
 @endsection
 @section('content')
+    <style>
+        .my-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .my-scroll::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        .my-scroll::-webkit-scrollbar-thumb {
+            background: #64748b;
+            border-radius: 10px;
+        }
+    </style>
     <div class="">
         <div class="flex items-center justify-between ">
             <!-- Filter Form -->

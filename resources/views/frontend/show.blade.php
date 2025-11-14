@@ -9,6 +9,7 @@
         interval: null,
         startX: 0,
         endX: 0,
+        qty: 1,
 
         get selectedColor() {
             return this.colors?.[this.selectedColorIndex] || null;
@@ -56,7 +57,7 @@
         resetSlide();
         startAutoSlide();
     })">
-        <h1 class="text-[16px] mb-6 uppercase text-center">Item</h1>
+        <h1 class="text-[16px] font-[700] mb-6 uppercase text-center tracking-wider">Item</h1>
         <div class="max-w-6xl mx-auto grid grid-cols-2 gap-4">
             <!-- IMAGE SLIDER -->
             <div class="relative flex flex-col items-center select-none">
@@ -100,39 +101,38 @@
             <!-- ITEM DETAILS -->
             <div>
                 @if ($item->status)
-                    <p class="text-[18px] inline-block py-1 uppercase">New</p>
+                    <p class="text-[16px] inline-block py-1 uppercase">New</p>
                 @endif
-                <h1 class="text-[18px] font-[600] uppercase mb-2">{{ $item->name }}</h1>
+                <h1 class="text-[16px] font-[500] uppercase">{{ $item->name }}</h1>
 
                 {{-- Price --}}
                 @if ($item->discount && $item->discount > 0)
                     @php
                         $discountedPrice = $item->price * (1 - $item->discount / 100);
                     @endphp
-                    <div class="text-[16px] font-semibold text-green-600">
+
+                    <div class="text-[16px] font-[500] text-[#000]">
                         ${{ number_format($discountedPrice, 2) }}
-                        <span class="text-gray-500 line-through text-[16px] ml-2">
+                        <span class="text-[#000] line-through text-[16px] ml-2 mt-2">
                             ${{ number_format($item->price, 2) }}
                         </span>
-
-                        <span class="bg-green-500 text-white text-[12px] px-2 py-1 rounded ml-4">
-                            {{ number_format($item->discount, 0) }}% OFF
-                        </span>
                     </div>
+                    <span class="bg-green-500 text-white text-[10px] px-2 py-1 rounded">
+                        {{ number_format($item->discount, 0) }}% OFF
+                    </span>
                 @else
-                    <p class="text-xl font-semibold">${{ number_format($item->price, 2) }}</p>
+                    <p class="text-[16px] font-[500]">${{ number_format($item->price, 2) }}</p>
                 @endif
 
                 <!-- Color Options -->
-                <div class="mt-6">
-                    <p class="font-semibold mb-2">Available Colors:</p>
+                <div class="mt-4">
+                    <p class="text-[14px] font-[400] mb-2">Colors</p>
                     <div class="flex gap-3 flex-wrap">
                         <template x-for="(color, index) in colors" :key="index">
                             <button class="flex items-center gap-1 border text-sm uppercase transition-all"
                                 :class="index === selectedColorIndex ? 'border-green-500 text-white' : 'hover:border-black'"
                                 @click="selectedColorIndex = index; resetSlide();">
-                                <span class="w-8 h-5" :style="'background-color:' + color.code"></span>
-                                {{-- <span x-text="color.name"></span> --}}
+                                <span class="w-[38px] h-[20px]" :style="'background-color:' + color.code"></span>
                             </button>
                         </template>
                     </div>
@@ -143,17 +143,17 @@
                     $sizes = is_array($item->size) ? $item->size : json_decode($item->size ?? '[]', true);
                 @endphp
                 @if (!empty($sizes))
-                    <div class="mt-6">
-                        <p class="font-semibold mb-2">Available Sizes:</p>
+                    <div class="mt-4">
+                        <p class="text-[14px] font-[400] mb-2">Sizes</p>
                         <div class="flex gap-2 flex-wrap">
                             @foreach ($sizes as $size)
                                 <button
                                     @click="selectedSize === '{{ $size }}' ? selectedSize = null : selectedSize = '{{ $size }}'"
                                     :class="selectedSize === '{{ $size }}'
                                         ?
-                                        'text-black border-green-500' :
-                                        'bg-transparent border-gray-500 text-black transition'"
-                                    class="border px-4 py-1 text-sm uppercase transition">
+                                        'text-black border-green-500 bg-[#D9D9D9]' :
+                                        'bg-[#D9D9D9] text-black'"
+                                    class="border px-4 py-1 text-[10px] uppercase transition">
                                     {{ $size }}
                                 </button>
                             @endforeach
@@ -161,11 +161,33 @@
                     </div>
                 @endif
 
-                <div class="pt-4">
-                    <h1 class="font-semibold mb-2">Description</h1>
-                    <div class="text-sm text-black mt-2 prone">{!! $item->description !!}</d>
+                <!-- Quantity -->
+                <div x-ref="qtyBox" class="mt-4">
+                    <p class="text-[14px] font-[400] mb-2">Quantity</p>
+
+                    <div class="flex items-center w-max">
+                        <button class="w-12 h-5 mr-1 flex items-center justify-center bg-[#D9D9D9]"
+                            @click="qty = Math.max(1, qty - 1)">
+                            -
+                        </button>
+
+                        <span
+                            class="w-12 h-5 flex items-center justify-center text-center text-[12px] font-[500] bg-[#D9D9D9]"
+                            x-text="qty"></span>
+
+                        <button class="w-12 h-5 ml-1 flex items-center justify-center bg-[#D9D9D9]" @click="qty++">
+                            +
+                        </button>
+                    </div>
                 </div>
-            </div>
+
+                @if (!empty($item->description))
+                    <div class="pt-4">
+                        <h1 class="text-[16px] font-[500] mb-2">Product Detail</h1>
+                        <div class="text-sm text-black mt-2 prose">{!! $item->description !!}</div>
+                    </div>
+                @endif
+
             </div>
         </div>
 
@@ -176,25 +198,28 @@
             <!-- Buy Now -->
             <button
                 @click="
-                        if (!selectedColor) return $store.cart.toast('Please select a color!');
-                        const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
-                        if (hasSizes && !selectedSize) return $store.cart.toast('Please select a size!');
+                    if (!selectedColor) return $store.cart.toast('Please select a color!');
+                    const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
+                    if (hasSizes && !selectedSize) return $store.cart.toast('Please select a size!');
 
-                        const discounted = {{ $item->discount ?? 0 }} > 0
-                            ? {{ $item->price }} * (1 - {{ $item->discount ?? 0 }} / 100)
-                            : {{ $item->price }};
+                    const qty = $refs.qtyBox.__x.$data.qty || 1;
+                    const discounted = {{ $item->discount ?? 0 }} > 0
+                        ? {{ $item->price }} * (1 - {{ $item->discount ?? 0 }} / 100)
+                        : {{ $item->price }};
+                    const total = discounted * qty;
 
-                        const message = encodeURIComponent(
-                            `🛒 My Order:\n` +
-                            `${'{{ $item->name }}'} - $${discounted.toFixed(2)} ` +
-                            `(${hasSizes ? `Size: ${selectedSize}, ` : ''}Color: ${selectedColor.name})\n\n` +
-                            `Total: $${discounted.toFixed(2)}`
-                        );
+                    const message = encodeURIComponent(
+                        `🛒 My Order:\n` +
+                        `{{ $item->name }} - $${discounted.toFixed(2)}\n` +
+                        `Color: ${selectedColor.name}\n` +
+                        `${hasSizes ? `Size: ${selectedSize}\n` : ''}` +
+                        `Quantity: ${qty}\n\n` +
+                        `Total: $${total.toFixed(2)}`
+                    );
 
-
-                        const telegramLink = `https://t.me/Teng_huy?text=${message}`;
-                        window.open(telegramLink, '_blank');
-                    "
+                    const telegramLink = `https://t.me/Teng_huy?text=${message}`;
+                    window.open(telegramLink, '_blank');
+                "
                 class="bg-black uppercase text-white px-6 py-2 transition">
                 Buy Now
             </button>
@@ -202,33 +227,33 @@
             <!-- Add to Cart -->
             <button
                 @click="
-                        if (!selectedColor) return $store.cart.toast('Please select a color!');
-                        const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
-                        if (hasSizes && !selectedSize) return $store.cart.toast('Please select a size!');
+                    if (!selectedColor) return $store.cart.toast('Please select a color!');
+                    const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
+                    if (hasSizes && !selectedSize) return $store.cart.toast('Please select a size!');
 
-                        $store.cart.add({
-                            name: '{{ $item->name }}',
-                            price: {{ $item->price }},
-                            discount: {{ $item->discount ?? 0 }},
-                            color: selectedColor.name,
-                            colorCode: selectedColor.code,
-                            size: selectedSize,
-                            image: selectedColor?.images?.[0]
-                                ? (
-                                    selectedColor.images[0].startsWith('http')
-                                        ? selectedColor.images[0]
-                                        : '{{ asset('') }}' + (
-                                            selectedColor.images[0].replace(/^item\//, '').startsWith('/')
-                                                ? selectedColor.images[0].replace(/^item\//, '').substring(1)
-                                                : selectedColor.images[0].replace(/^item\//, '')
-                                        )
-                                )
-                                : '{{ asset('assets/images/no-image.png') }}',
-                        });
-                    "
+                    $store.cart.add({
+                        name: '{{ $item->name }}',
+                        price: {{ $item->price }},
+                        discount: {{ $item->discount ?? 0 }},
+                        color: selectedColor.name,
+                        colorCode: selectedColor.code,
+                        size: selectedSize,
+                        qty: qty,  // ← Now works perfectly
+                        image: selectedColor?.images?.[0]
+                            ? (
+                                selectedColor.images[0].startsWith('http')
+                                    ? selectedColor.images[0]
+                                    : '{{ asset('') }}' + selectedColor.images[0]
+                                        .replace(/^item\//, '')
+                                        .replace(/^\//, '')
+                            )
+                            : '{{ asset('assets/images/no-image.png') }}',
+                    });
+                "
                 class="w-full bg-black text-white px-6 py-2 transition uppercase">
                 Add to Cart
             </button>
+
         </div>
     </section>
 
@@ -310,45 +335,67 @@
                             </div>
 
                             <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
-                                <button @click="showSizes = !showSizes" class="rounded mt-2 w-full">
-                                    <svg class="w-5 h-5" viewBox="0 0 6 7" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M1.17606 1.4942H0.779054C0.504719 1.4942 0.277003 1.70623 0.257429 1.97997L0.00132482 5.56605C-0.00898516 5.71083 0.0412178 5.85338 0.140134 5.95962C0.239199 6.06586 0.377713 6.12622 0.52295 6.12622H4.66248C4.80771 6.12622 4.94623 6.06586 5.04529 5.95962C5.14421 5.85338 5.19441 5.71083 5.1841 5.56605L4.928 1.97997C4.90842 1.70623 4.68071 1.4942 4.40637 1.4942H4.0122V1.41949C4.0122 0.635483 3.37672 0 2.59271 0C1.8374 0 1.13931 0.601565 1.17322 1.41949C1.17427 1.44429 1.17517 1.46925 1.17606 1.4942ZM4.0122 1.94246V3.06311C4.0122 3.18683 3.91179 3.28724 3.78807 3.28724C3.66435 3.28724 3.56394 3.18683 3.56394 3.06311V1.94246H1.62148V3.06311C1.62148 3.18683 1.52107 3.28724 1.39735 3.28724C1.27363 3.28724 1.17322 3.18683 1.17322 3.06311C1.17322 3.06311 1.19265 2.53939 1.18622 1.94246H0.779054C0.739906 1.94246 0.707334 1.97279 0.704645 2.01179L0.448386 5.59787C0.446891 5.61864 0.454067 5.63896 0.468262 5.6542C0.482457 5.66929 0.50218 5.67796 0.52295 5.67796H4.66248C4.68325 5.67796 4.70297 5.66929 4.71717 5.6542C4.73136 5.63896 4.73854 5.61864 4.73704 5.59787L4.48078 2.01179C4.47809 1.97279 4.44552 1.94246 4.40637 1.94246H4.0122ZM3.56394 1.4942V1.41949C3.56394 0.883072 3.12913 0.44826 2.59271 0.44826C2.0563 0.44826 1.62148 0.883072 1.62148 1.41949V1.4942H3.56394Z"
-                                            fill="black" />
-                                    </svg>
-                                </button>
+                                
+                                @if (!empty($sizes))
+                                    <!-- 🟢 Has sizes -->
+                                    <button @click="showSizes = !showSizes" class="rounded mt-2 w-full">
+                                        <svg class="w-5 h-5" viewBox="0 0 6 7" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M1.17606 1.4942H0.779054C0.504719 1.4942 0.277003 1.70623 0.257429 1.97997L0.00132482 5.56605C-0.00898516 5.71083 0.0412178 5.85338 0.140134 5.95962C0.239199 6.06586 0.377713 6.12622 0.52295 6.12622H4.66248C4.80771 6.12622 4.94623 6.06586 5.04529 5.95962C5.14421 5.85338 5.19441 5.71083 5.1841 5.56605L4.928 1.97997C4.90842 1.70623 4.68071 1.4942 4.40637 1.4942H4.0122V1.41949C4.0122 0.635483 3.37672 0 2.59271 0C1.8374 0 1.13931 0.601565 1.17322 1.41949C1.17427 1.44429 1.17517 1.46925 1.17606 1.4942ZM4.0122 1.94246V3.06311C4.0122 3.18683 3.91179 3.28724 3.78807 3.28724C3.66435 3.28724 3.56394 3.18683 3.56394 3.06311V1.94246H1.62148V3.06311C1.62148 3.18683 1.52107 3.28724 1.39735 3.28724C1.27363 3.28724 1.17322 3.18683 1.17322 3.06311C1.17322 3.06311 1.19265 2.53939 1.18622 1.94246H0.779054C0.739906 1.94246 0.707334 1.97279 0.704645 2.01179L0.448386 5.59787C0.446891 5.61864 0.454067 5.63896 0.468262 5.6542C0.482457 5.66929 0.50218 5.67796 0.52295 5.67796H4.66248C4.68325 5.67796 4.70297 5.66929 4.71717 5.6542C4.73136 5.63896 4.73854 5.61864 4.73704 5.59787L4.48078 2.01179C4.47809 1.97279 4.44552 1.94246 4.40637 1.94246H4.0122ZM3.56394 1.4942V1.41949C3.56394 0.883072 3.12913 0.44826 2.59271 0.44826C2.0563 0.44826 1.62148 0.883072 1.62148 1.41949V1.4942H3.56394Z"
+                                                fill="black" />
+                                        </svg>
+                                    </button>
 
-                                <div x-show="showSizes" x-transition:enter="transition ease-out duration-200"
-                                    x-transition:enter-start="opacity-0 scale-95 w-0"
-                                    x-transition:enter-end="opacity-100 scale-100 w-full"
-                                    x-transition:leave="transition ease-in duration-150"
-                                    x-transition:leave-start="opacity-100 scale-100 w-full"
-                                    x-transition:leave-end="opacity-0 scale-95 w-0"
-                                    class="absolute bottom-full mb-3 -left-6 bg-white border rounded z-50 overflow-hidden">
-                                    <div class="flex flex-col gap-2 p-2">
-                                        @foreach ($sizes as $size)
-                                            <button
-                                                @click="
-                                                selectedSize = '{{ $size }}';
-                                                $store.cart.add({
-                                                    id: '{{ $related->id }}',
-                                                    name: '{{ $related->name }}',
-                                                    price: {{ $related->price }},
-                                                    discount: {{ $related->discount ?? 0 }},
-                                                    image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
-                                                    slug: '{{ $related->slug }}',
-                                                    size: '{{ $size }}',
-                                                    color: '{{ $firstName }}'
-                                                });
-                                                showSizes = false;
-                                            "
-                                                class="border px-2 py-1 rounded text-[12px] uppercase hover:bg-black hover:text-white transition">
-                                                {{ $size }}
-                                            </button>
-                                        @endforeach
+                                    <div x-show="showSizes" x-transition
+                                        class="absolute bottom-full mb-3 -left-6 bg-white border rounded z-50 overflow-hidden">
+                                        <div class="flex flex-col gap-2 p-2">
+                                            @foreach ($sizes as $size)
+                                                <button
+                                                    @click="
+                                                    selectedSize = '{{ $size }}';
+                                                    $store.cart.add({
+                                                        id: '{{ $related->id }}',
+                                                        name: '{{ $related->name }}',
+                                                        price: {{ $related->price }},
+                                                        discount: {{ $related->discount ?? 0 }},
+                                                        image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                                        slug: '{{ $related->slug }}',
+                                                        size: '{{ $size }}',
+                                                        color: '{{ $firstName }}'
+                                                    });
+                                                    showSizes = false;
+                                                "
+                                                    class='border px-2 py-1 rounded text-[12px] uppercase hover:bg-black hover:text-white transition'>
+                                                    {{ $size }}
+                                                </button>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <!-- 🔴 No sizes — Add directly to cart -->
+                                    <button
+                                        @click="
+                                        $store.cart.add({
+                                            id: '{{ $item->id }}',
+                                            name: '{{ $related->name }}',
+                                            price: {{ $related->price }},
+                                            discount: {{ $related->discount ?? 0 }},
+                                            image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                            slug: '{{ $related->slug }}',
+                                            size: '',
+                                            color: '{{ $firstName }}'
+                                        });
+                                    "
+                                        class="rounded mt-2 w-full">
+                                        <svg class="w-5 h-5" viewBox="0 0 6 7" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M1.17606 1.4942H0.779054C0.504719 1.4942 0.277003 1.70623 0.257429 1.97997L0.00132482 5.56605C-0.00898516 5.71083 0.0412178 5.85338 0.140134 5.95962C0.239199 6.06586 0.377713 6.12622 0.52295 6.12622H4.66248C4.80771 6.12622 4.94623 6.06586 5.04529 5.95962C5.14421 5.85338 5.19441 5.71083 5.1841 5.56605L4.928 1.97997C4.90842 1.70623 4.68071 1.4942 4.40637 1.4942H4.0122V1.41949C4.0122 0.635483 3.37672 0 2.59271 0C1.8374 0 1.13931 0.601565 1.17322 1.41949C1.17427 1.44429 1.17517 1.46925 1.17606 1.4942ZM4.0122 1.94246V3.06311C4.0122 3.18683 3.91179 3.28724 3.78807 3.28724C3.66435 3.28724 3.56394 3.18683 3.56394 3.06311V1.94246H1.62148V3.06311C1.62148 3.18683 1.52107 3.28724 1.39735 3.28724C1.27363 3.28724 1.17322 3.18683 1.17322 3.06311C1.17322 3.06311 1.19265 2.53939 1.18622 1.94246H0.779054C0.739906 1.94246 0.707334 1.97279 0.704645 2.01179L0.448386 5.59787C0.446891 5.61864 0.454067 5.63896 0.468262 5.6542C0.482457 5.66929 0.50218 5.67796 0.52295 5.67796H4.66248C4.68325 5.67796 4.70297 5.66929 4.71717 5.6542C4.73136 5.63896 4.73854 5.61864 4.73704 5.59787L4.48078 2.01179C4.47809 1.97279 4.44552 1.94246 4.40637 1.94246H4.0122ZM3.56394 1.4942V1.41949C3.56394 0.883072 3.12913 0.44826 2.59271 0.44826C2.0563 0.44826 1.62148 0.883072 1.62148 1.41949V1.4942H3.56394Z"
+                                                fill="black" />
+                                        </svg>
+                                    </button>
+                                @endif
                             </div>
                         </div>
                     </div>

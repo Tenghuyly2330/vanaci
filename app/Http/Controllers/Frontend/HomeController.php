@@ -19,7 +19,7 @@ class HomeController extends Controller
         // 🔹 Fetch random items with relationships
         $items = Item::with(['category', 'type'])
             ->inRandomOrder()
-            ->take(8)
+            ->take(12)
             ->get()
             ->map(function ($item) {
                 // ✅ Decode colors safely

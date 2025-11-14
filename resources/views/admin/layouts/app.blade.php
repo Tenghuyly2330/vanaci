@@ -69,11 +69,10 @@
                                 <span class="text nav-text">Type</span>
                             </a>
                         </li>
-
                         <li
                             class="nav-link {{ Request::is('category') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
                             <a href="{{ url('category') }}">
-                                <i class='bx bxl-vimeo icon'></i>
+                                <i class='bx bx-category-alt icon'></i>
                                 <span class="text nav-text">Category</span>
                             </a>
                         </li>
@@ -81,7 +80,7 @@
                         <li
                             class="nav-link {{ Request::is('item_backend') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
                             <a href="{{ url('item_backend') }}">
-                                <i class='bx bxl-vimeo icon'></i>
+                                <i class='bx bx-package icon'></i>
                                 <span class="text nav-text">Products</span>
                             </a>
                         </li>

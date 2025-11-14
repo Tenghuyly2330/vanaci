@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto shadow-md rounded-lg p-6 my-2">
-        <h2 class="text-2xl font-bold text-[#401457] mb-4">Edit Item</h2>
+        <h2 class="text-2xl font-bold text-[#613bf1] mb-4">Edit Item</h2>
         <form action="{{ route('item_backend.update', $item_backend->id) }}" method="POST" enctype="multipart/form-data"
             class="space-y-6" id="itemEditForm">
             @csrf
@@ -11,27 +11,39 @@
             <input type="hidden" name="page" value="{{ request()->page }}">
             {{-- Basic Info --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" name="name" value="{{ $item_backend->name }}" placeholder="Name"
-                    class="border p-2 rounded">
-                <input type="number" step="0.01" name="price" value="{{ $item_backend->price }}" min="0"
-                    class="border p-2 rounded">
-                <input type="number" name="discount" value="{{ $item_backend->discount }}" min="0"
-                    max="100" class="border p-2 rounded">
+                <div>
+                    <label class="block text-sm font-medium text-[#000]">Name</label>
+                    <input type="text" name="name" value="{{ $item_backend->name }}" placeholder="Name"
+                        class="w-full border p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#000]">Price</label>
+                    <input type="number" step="0.01" name="price" value="{{ $item_backend->price }}"
+                        min="0" class="w-full border p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#000]">Discount (Optional (%))</label>
+                    <input type="number" name="discount" value="{{ $item_backend->discount }}" min="0"
+                        max="100" class="w-full border p-2 rounded">
+                </div>
             </div>
 
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <label for="description" class="block text-sm font-medium text-[#000]">Description</label>
                 <textarea name="description" id="description" rows="6"
                     class="mt-1 block w-full p-2 border rounded-md text-black text-[10px]">{{ old('description', $item_backend->description) }}</textarea>
                 <x-input-error class="mt-2" :messages="$errors->get('description')" />
             </div>
 
             {{-- Status --}}
-            <div class="flex items-center gap-2">
-                <input type="hidden" name="status" value="0">
-                <input type="checkbox" name="status" value="1" id="status_new" class="form-checkbox text-blue-500"
-                    {{ $item_backend->status ? 'checked' : '' }}>
-                <label for="status_new" class="text-sm font-medium text-gray-700">New</label>
+            <div class="flex flex-col gap-2">
+                <label for="" class="text-sm font-medium text-[#000]">Status (Optional)</label>
+                <div class="flex items-center gap-2">
+                    <input type="hidden" name="status" value="0">
+                    <input type="checkbox" name="status" value="1" id="status_new"
+                        class="form-checkbox text-[#613bf1]" {{ $item_backend->status ? 'checked' : '' }}>
+                    <label for="status_new" class="text-sm font-medium text-gray-700">New</label>
+                </div>
             </div>
 
             {{-- Sizes --}}
@@ -46,7 +58,7 @@
                         </div>
                     @endforeach
                 </div>
-                <button type="button" id="addSizeBtn" class="bg-blue-500 text-white px-3 py-1 rounded mt-2">
+                <button type="button" id="addSizeBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded mt-2">
                     + Add Size
                 </button>
             </div>
@@ -92,7 +104,7 @@
                     @endforeach
                 </div>
 
-                <button type="button" id="addColorBtn" class="bg-green-600 text-white px-3 py-1 rounded mt-2">
+                <button type="button" id="addColorBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded mt-2">
                     + Add Color
                 </button>
             </div>
@@ -103,7 +115,7 @@
                 <div class="flex gap-4">
                     @foreach ($types as $type)
                         <label class="flex items-center gap-2">
-                            <input type="radio" name="type_id" value="{{ $type->id }}" class="type-radio"
+                            <input class="text-[#613bf1]" type="radio" name="type_id" value="{{ $type->id }}" class="type-radio"
                                 {{ $item_backend->type_id == $type->id ? 'checked' : '' }}>
                             {{ $type->type }}
                         </label>
@@ -117,7 +129,7 @@
                     @foreach ($categories as $cat)
                         <label class="flex items-center gap-2 category-item" data-type-id="{{ $cat->type_id }}"
                             style="{{ $item_backend->type_id != $cat->type_id ? 'display:none;' : '' }}">
-                            <input type="radio" name="category_id" value="{{ $cat->id }}"
+                            <input class="text-[#613bf1]" type="radio" name="category_id" value="{{ $cat->id }}"
                                 {{ $item_backend->category_id == $cat->id ? 'checked' : '' }}>
                             {{ $cat->name }}
                         </label>
@@ -128,15 +140,14 @@
             {{-- Submit --}}
             <div class="flex justify-between mt-6">
                 <a href="{{ route('item_backend.index') }}"
-                    class="border border-[#4FC9EE] hover:bg-[#4FC9EE] hover:text-white px-6 py-1 rounded">Back</a>
-                <button type="submit" class="bg-[#4FC9EE] text-white px-6 py-1 rounded">Update</button>
+                    class="border border-[#613bf1] hover:bg-[#613bf1] hover:text-white px-6 py-1 rounded">Back</a>
+                <button type="submit" class="bg-[#613bf1] text-white px-6 py-1 rounded">Update</button>
             </div>
         </form>
     </div>
 
     {{-- ✅ CLEANED & FIXED JS --}}
     <script>
-
         ClassicEditor
             .create(document.querySelector('#description'), {
                 toolbar: [
@@ -258,6 +269,24 @@
 
                 block.remove();
             }
+        });
+
+        document.querySelectorAll('.type-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedType = this.value;
+
+                document.querySelectorAll('#category_group .category-item').forEach(item => {
+                    const typeId = item.dataset.typeId;
+
+                    // Show categories belonging to selected type
+                    if (typeId == selectedType) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                        item.querySelector('input').checked = false; // uncheck invalid category
+                    }
+                });
+            });
         });
     </script>
 </x-app-layout>
