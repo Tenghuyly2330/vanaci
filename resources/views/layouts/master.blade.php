@@ -189,7 +189,7 @@
 
                     const total = this.total;
                     const message = encodeURIComponent(`🛒 My Order:\n${items}\n\nTotal: $${total}`);
-                    const telegramLink = `https://t.me/Teng_huy?text=${message}`;
+                    const telegramLink = `https://t.me/vann_clobber?text=${message}`;
                     window.open(telegramLink, '_blank');
                 }
             });

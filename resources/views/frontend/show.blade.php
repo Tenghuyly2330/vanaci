@@ -214,7 +214,7 @@
                         `Total: $${total.toFixed(2)}`
                     );
 
-                    const telegramLink = `https://t.me/Teng_huy?text=${message}`;
+                    const telegramLink = `https://t.me/vann_clobber?text=${message}`;
                     window.open(telegramLink, '_blank');
                 "
                 class="bg-black uppercase text-white px-6 py-2 transition">
