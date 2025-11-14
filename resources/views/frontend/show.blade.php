@@ -198,11 +198,10 @@
             <!-- Buy Now -->
             <button
                 @click="
-                    if (!selectedColor) return $store.cart.toast('Please select a color!');
-                    const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
-                    if (hasSizes && !selectedSize) return $store.cart.toast('Please select a size!');
+                    if (!selectedColor) return alert('Please select a color!');
+                    const hasSizes = true; // or dynamically set based on $hasSizes
+                    if (hasSizes && !selectedSize) return alert('Please select a size!');
 
-                    const qty = $refs.qtyBox.__x.$data.qty || 1;
                     const discounted = {{ $item->discount ?? 0 }} > 0
                         ? {{ $item->price }} * (1 - {{ $item->discount ?? 0 }} / 100)
                         : {{ $item->price }};
@@ -210,10 +209,8 @@
 
                     const message = encodeURIComponent(
                         `🛒 My Order:\n` +
-                        `{{ $item->name }} - $${discounted.toFixed(2)}\n` +
-                        `Color: ${selectedColor.name}\n` +
-                        `${hasSizes ? `Size: ${selectedSize}\n` : ''}` +
-                        `Quantity: ${qty}\n\n` +
+                        `{{ $item->name }} - $${discounted.toFixed(2)} ` +
+                        `x ${qty} (Color: ${selectedColor.name}${hasSizes ? `, Size: ${selectedSize}` : ''})\n` +
                         `Total: $${total.toFixed(2)}`
                     );
 
@@ -335,7 +332,7 @@
                             </div>
 
                             <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
-                                
+
                                 @if (!empty($sizes))
                                     <!-- 🟢 Has sizes -->
                                     <button @click="showSizes = !showSizes" class="rounded mt-2 w-full">
