@@ -3,9 +3,23 @@
 @section('content')
     <!-- Banner Section -->
     <section class="relative h-screen flex lg:hidden items-center justify-center text-center">
-        <div class="w-full h-full absolute inset-0">
+
+        {{-- <div class="w-full h-full absolute inset-0">
             <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">
-        </div>
+        </div> --}}
+        @if ($typeName == 'Men')
+            <div class="w-full h-full absolute inset-0">
+                <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">
+            </div>
+        @elseif ($typeName == 'Women')
+            <div class="w-full h-full absolute inset-0">
+                <img src="{{ asset('assets/images/banner-1.jpg') }}" alt="" class="w-full h-full object-cover">
+            </div>
+        @else
+            <div class="w-full h-full absolute inset-0">
+                <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">
+            </div>
+        @endif
 
         <div class="text-white z-30">
             <h1 class="text-[40px] font-[200] tracking-widest">

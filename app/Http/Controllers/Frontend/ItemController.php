@@ -49,13 +49,18 @@ class ItemController extends Controller
 
             if (!$type && !$category) {
                 $typeName = 'New Arrivals';
+                $bannerImage = 'banner-1.png';
             } elseif ($type && !$category) {
                 $typeName = "{$type->type} - New Arrivals";
+                $bannerImage = 'banner-2.png';
             } elseif ($type && $category) {
                 $typeName = "{$type->type} - New Arrivals";
                 $categoryName = $category->name ?? null;
+                $bannerImage = 'banner-3.png';
             }
         }
+
+
 
         $items = $itemsQuery->get()->map(function ($item) {
 
