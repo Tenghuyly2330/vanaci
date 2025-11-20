@@ -22,7 +22,6 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -78,7 +77,7 @@
         @yield('content')
     </div>
 
-    {{-- @include('components.footer') --}}
+    @include('components.footer')
 
     @yield('js')
     <script src="//unpkg.com/alpinejs" defer></script>
@@ -92,7 +91,7 @@
         });
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('alpine:init', () => {
             Alpine.store('cart', {
                 items: JSON.parse(localStorage.getItem('cart_items') || '[]'),
@@ -189,14 +188,85 @@
 
                     const total = this.total;
                     const message = encodeURIComponent(`🛒 My Order:\n${items}\n\nTotal: $${total}`);
-                    const telegramLink = `https://t.me/vann_clobber?text=${message}`;
+                    const telegramLink = `https://t.me/+855967777516?text=${message}`;
                     window.open(telegramLink, '_blank');
                 }
             });
         });
+    </script> --}}
+
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.store('cart', {
+        items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
+
+        get count() {
+            return this.items.length;
+        },
+
+        add(item) {
+            if (!this.items.find(i => i.id === item.id)) {
+                this.items.push(item);
+                localStorage.setItem('cartItems', JSON.stringify(this.items));
+                this.toast(`${item.name} added to cart`);
+            }
+        },
+
+        remove(id) {
+            const item = this.items.find(i => i.id === id);
+            this.items = this.items.filter(i => i.id !== id);
+            localStorage.setItem('cartItems', JSON.stringify(this.items));
+            if(item) this.toast(`${item.name} removed from cart`);
+        },
+
+        toast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.className = 'fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg opacity-90 z-50';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    });
+});
+</script>
+
+
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            slidesPerView: 3.5,
+
+            breakpoints: {
+                // Mobile
+                0: {
+                    slidesPerView: 1.2,
+                },
+                // Small screens (tablet)
+                640: {
+                    slidesPerView: 2.2,
+                },
+                // Medium screens
+                768: {
+                    slidesPerView: 3,
+                },
+                // Large screens
+                1024: {
+                    slidesPerView: 3.5,
+                }
+            }, // ← FIXED: add comma here
+
+            spaceBetween: 30,
+
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+
+            // autoplay: {
+            //     delay: 2500,
+            //     disableOnInteraction: false,
+            // },
+        });
     </script>
-
-
 </body>
 
 </html>

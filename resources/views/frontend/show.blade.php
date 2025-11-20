@@ -2,101 +2,135 @@
 
 @section('content')
     <section class="px-4 py-10" x-data="{
-        colors: {{ json_encode(is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true)) }},
-        selectedColorIndex: 0,
-        selectedSize: null,
-        slideIndex: 0,
-        interval: null,
-        startX: 0,
-        endX: 0,
-        qty: 1,
+    colors: {{ json_encode(is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true)) }},
+    selectedColorIndex: 0,
+    selectedSize: null,
+    slideIndex: 0,
+    interval: null,
+    startX: 0,
+    endX: 0,
+    qty: 1,
+    lightboxOpen: false,
+    lightboxIndex: 0,
 
-        get selectedColor() {
-            return this.colors?.[this.selectedColorIndex] || null;
-        },
+    get selectedColor() {
+        return this.colors?.[this.selectedColorIndex] || null;
+    },
 
-        resetSlide() {
-            this.slideIndex = 0;
-        },
+    resetSlide() {
+        this.slideIndex = 0;
+    },
 
-        nextSlide() {
-            if (this.selectedColor?.images?.length > 1) {
-                this.slideIndex = (this.slideIndex + 1) % this.selectedColor.images.length;
-            }
-        },
-
-        prevSlide() {
-            if (this.selectedColor?.images?.length > 1) {
-                this.slideIndex = (this.slideIndex - 1 + this.selectedColor.images.length) % this.selectedColor.images.length;
-            }
-        },
-
-        startAutoSlide() {
-            if (this.interval) clearInterval(this.interval);
-            if (this.selectedColor?.images?.length > 1) {
-                this.interval = setInterval(() => this.nextSlide(), 4000);
-            }
-        },
-
-        handleTouchStart(e) {
-            this.startX = e.touches ? e.touches[0].clientX : e.clientX;
-        },
-
-        handleTouchMove(e) {
-            this.endX = e.touches ? e.touches[0].clientX : e.clientX;
-        },
-
-        handleTouchEnd() {
-            const diff = this.endX - this.startX;
-            if (Math.abs(diff) > 50) {
-                diff > 0 ? this.prevSlide() : this.nextSlide();
-            }
+    nextSlide() {
+        if (this.selectedColor?.images?.length > 1) {
+            this.slideIndex = (this.slideIndex + 1) % this.selectedColor.images.length;
         }
-    }" x-init="startAutoSlide();
-    $watch('selectedColorIndex', () => {
-        resetSlide();
-        startAutoSlide();
-    })">
+    },
+
+    prevSlide() {
+        if (this.selectedColor?.images?.length > 1) {
+            this.slideIndex = (this.slideIndex - 1 + this.selectedColor.images.length) % this.selectedColor.images.length;
+        }
+    },
+
+    startAutoSlide() {
+        if (this.interval) clearInterval(this.interval);
+        if (this.selectedColor?.images?.length > 1) {
+            this.interval = setInterval(() => this.nextSlide(), 4000);
+        }
+    },
+
+    handleTouchStart(e) {
+        this.startX = e.touches ? e.touches[0].clientX : e.clientX;
+    },
+
+    handleTouchMove(e) {
+        this.endX = e.touches ? e.touches[0].clientX : e.clientX;
+    },
+
+    handleTouchEnd() {
+        const diff = this.endX - this.startX;
+        if (Math.abs(diff) > 50) {
+            diff > 0 ? this.prevSlide() : this.nextSlide();
+        }
+    },
+
+    openLightbox(index) {
+        this.lightboxIndex = index;
+        this.lightboxOpen = true;
+    },
+
+    closeLightbox() {
+        this.lightboxOpen = false;
+    }
+}" x-init="startAutoSlide(); $watch('selectedColorIndex', () => { resetSlide(); startAutoSlide(); })">
         <h1 class="text-[16px] font-[700] mb-6 uppercase text-center tracking-wider">Item</h1>
         <div class="max-w-6xl mx-auto grid grid-cols-2 gap-4">
             <!-- IMAGE SLIDER -->
-            <div class="relative flex flex-col items-center select-none">
-                <div class="relative w-full overflow-hidden" @mouseenter="if (interval) clearInterval(interval)"
-                    @mouseleave="startAutoSlide()" @mousedown="handleTouchStart($event)" @mousemove="handleTouchMove($event)"
-                    @mouseup="handleTouchEnd()" @touchstart="handleTouchStart($event)" @touchmove="handleTouchMove($event)"
-                    @touchend="handleTouchEnd">
+<div class="relative flex flex-col items-center select-none">
+            <div class="relative w-full overflow-hidden cursor-pointer"
+                 @mouseenter="if (interval) clearInterval(interval)"
+                 @mouseleave="startAutoSlide()"
+                 @mousedown="handleTouchStart($event)"
+                 @mousemove="handleTouchMove($event)"
+                 @mouseup="handleTouchEnd()"
+                 @touchstart="handleTouchStart($event)"
+                 @touchmove="handleTouchMove($event)"
+                 @touchend="handleTouchEnd()">
 
-                    <!-- Images -->
-                    <template x-if="selectedColor && selectedColor.images && selectedColor.images.length > 0">
-                        <div class="relative w-full h-[320px]">
-                            <template x-for="(img, i) in selectedColor.images" :key="i">
-                                <img :src="img.startsWith('http') ?
-                                    img :
-                                    '{{ asset('') }}' + (img.startsWith('/') ? img.substring(1) : img)"
-                                    :alt="selectedColor.name"
-                                    class="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700"
-                                    :class="i === slideIndex ? 'opacity-100' : 'opacity-0'">
-                            </template>
-                        </div>
-                    </template>
-
-                    <!-- Fallback -->
-                    <template x-if="!selectedColor || !selectedColor.images || selectedColor.images.length === 0">
-                        <img src="{{ asset('assets/images/default.jpg') }}" class="w-full h-[320px] object-cover rounded">
-                    </template>
-                </div>
-
-                <!-- Pagination -->
-                <template x-if="selectedColor && selectedColor.images && selectedColor.images.length > 1">
-                    <div class="flex justify-center gap-2 mt-4">
+                <!-- Images -->
+                <template x-if="selectedColor && selectedColor.images && selectedColor.images.length > 0">
+                    <div class="relative w-full h-[320px]">
                         <template x-for="(img, i) in selectedColor.images" :key="i">
-                            <div @click="slideIndex = i"
-                                class="h-[3px] rounded-full cursor-pointer transition-all duration-300"
-                                :class="i === slideIndex ? 'bg-black w-10' : 'bg-gray-300 w-8 hover:bg-gray-400'"></div>
+                            <img :src="img.startsWith('http') ? img : '{{ asset('') }}' + (img.startsWith('/') ? img.substring(1) : img)"
+                                 :alt="selectedColor.name"
+                                 class="absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700"
+                                 :class="i === slideIndex ? 'opacity-100' : 'opacity-0'"
+                                 @click="openLightbox(i)">
                         </template>
                     </div>
                 </template>
+
+                <!-- Fallback -->
+                <template x-if="!selectedColor || !selectedColor.images || selectedColor.images.length === 0">
+                    <img src="{{ asset('assets/images/default.jpg') }}" class="w-full h-[320px] object-cover rounded">
+                </template>
             </div>
+
+            <!-- Pagination -->
+            <template x-if="selectedColor && selectedColor.images && selectedColor.images.length > 1">
+                <div class="flex justify-center gap-2 mt-4">
+                    <template x-for="(img, i) in selectedColor.images" :key="i">
+                        <div @click="slideIndex = i"
+                             class="h-[3px] rounded-full cursor-pointer transition-all duration-300"
+                             :class="i === slideIndex ? 'bg-black w-10' : 'bg-gray-300 w-8 hover:bg-gray-400'"></div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <!-- LIGHTBOX POPUP -->
+        <div x-show="lightboxOpen"
+             x-transition.opacity x-cloak
+             class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-center p-4"
+             @click.self="closeLightbox()">
+
+            <button @click="closeLightbox()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+
+            <div class="max-w-4xl w-full">
+                <img :src="selectedColor.images[lightboxIndex]" class="w-full h-[500px] object-contain mb-4">
+
+                <!-- Thumbnails -->
+                <div class="flex gap-2 justify-center overflow-x-auto">
+                    <template x-for="(img, i) in selectedColor.images" :key="i">
+                        <img :src="img"
+                             class="w-20 h-20 object-cover border-2 cursor-pointer"
+                             :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
+                             @click="lightboxIndex = i">
+                    </template>
+                </div>
+            </div>
+        </div>
 
             <!-- ITEM DETAILS -->
             <div>
@@ -196,7 +230,7 @@
             @php $hasSizes = !empty($sizes); @endphp
 
             <!-- Buy Now -->
-            <button
+           <button
                 @click="
                     if (!selectedColor) return alert('Please select a color!');
                     const hasSizes = true; // or dynamically set based on $hasSizes
@@ -207,22 +241,57 @@
                         : {{ $item->price }};
                     const total = discounted * qty;
 
+                    const currentUrl = window.location.href;
+
                     const message = encodeURIComponent(
                         `🛒 My Order:\n` +
                         `{{ $item->name }} - $${discounted.toFixed(2)} ` +
                         `x ${qty} (Color: ${selectedColor.name}${hasSizes ? `, Size: ${selectedSize}` : ''})\n` +
-                        `Total: $${total.toFixed(2)}`
+                        `Total: $${total.toFixed(2)}\n` +
+                        `Page: ${currentUrl}`
                     );
 
-                    const telegramLink = `https://t.me/vann_clobber?text=${message}`;
+                    const telegramLink = `https://t.me/+855967777516?text=${message}`;
                     window.open(telegramLink, '_blank');
                 "
-                class="bg-black uppercase text-white px-6 py-2 transition">
+                class="bg-black uppercase text-white px-6 py-2 transition  tracking-widest"
+            >
                 Buy Now
             </button>
 
+
+            <button x-data="{ added: $store.cart.items.some(i => i.id == '{{ $item->id }}') }"
+                @click="
+                    added = !added;
+
+                    if (added) {
+                        $store.cart.add({
+                            id: '{{ $item->id }}',
+                            name: '{{ $item->name }}',
+                            price: {{ $item->price }},
+                            image: selectedColor?.images?.[0]
+                                    ? (
+                                        selectedColor.images[0].startsWith('http')
+                                            ? selectedColor.images[0]
+                                            : '{{ asset('') }}' + selectedColor.images[0]
+                                                .replace(/^item\//, '')
+                                                .replace(/^\//, '')
+                                    )
+                                    : '{{ asset('assets/images/no-image.png') }}',
+                            discount: {{ $item->discount ?? 0 }},
+                            status: {{ $item->status ? 'true' : 'false' }},
+                            slug: '{{ $item->slug }}'
+                        });
+                    } else {
+                        $store.cart.remove('{{ $item->id }}');
+                    }
+                "
+                class="w-full bg-black text-white px-6 py-2 transition uppercase tracking-widest">
+                favorite
+            </button>
+
             <!-- Add to Cart -->
-            <button
+            {{-- <button
                 @click="
                     if (!selectedColor) return $store.cart.toast('Please select a color!');
                     const hasSizes = {{ $hasSizes ? 'true' : 'false' }};
@@ -249,7 +318,7 @@
                 "
                 class="w-full bg-black text-white px-6 py-2 transition uppercase">
                 Add to Cart
-            </button>
+            </button> --}}
 
         </div>
     </section>
@@ -331,7 +400,46 @@
                                 </p>
                             </div>
 
-                            <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
+                            <div>
+                                <button x-data="{ added: $store.cart.items.some(i => i.id == '{{ $item->id }}') }"
+                                    @click="
+                                    added = !added;
+
+                                    if (added) {
+                                        $store.cart.add({
+                                            id: '{{ $item->id }}',
+                                            name: '{{ $item->name }}',
+                                            price: {{ $item->price }},
+                                            image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                            discount: {{ $item->discount ?? 0 }},
+                                            status: {{ $item->status ? 'true' : 'false' }},
+                                            slug: '{{ $item->slug }}'
+                                        });
+                                    } else {
+                                        $store.cart.remove('{{ $item->id }}');
+                                    }
+                                "
+                                    class="w-[32px] h-[32px] flex items-center justify-center transition relative">
+                                    <!-- Default Cart Icon -->
+                                    <svg x-show="!added" class="w-5 h-5 absolute inset-0 m-auto" viewBox="0 0 6 7"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M1.17606 1.4942H0.779054C0.504719 1.4942 0.277003 1.70623 0.257429 1.97997L0.00132482 5.56605C-0.00898516 5.71083 0.0412178 5.85338 0.140134 5.95962C0.239199 6.06586 0.377713 6.12622 0.52295 6.12622H4.66248C4.80771 6.12622 4.94623 6.06586 5.04529 5.95962C5.14421 5.85338 5.19441 5.71083 5.1841 5.56605L4.928 1.97997C4.90842 1.70623 4.68071 1.4942 4.40637 1.4942H4.0122V1.41949C4.0122 0.635483 3.37672 0 2.59271 0C1.8374 0 1.13931 0.601565 1.17322 1.41949C1.17427 1.44429 1.17517 1.46925 1.17606 1.4942ZM4.0122 1.94246V3.06311C4.0122 3.18683 3.91179 3.28724 3.78807 3.28724C3.66435 3.28724 3.56394 3.18683 3.56394 3.06311V1.94246H1.62148V3.06311C1.62148 3.18683 1.52107 3.28724 1.39735 3.28724C1.27363 3.28724 1.17322 3.18683 1.17322 3.06311C1.17322 3.06311 1.19265 2.53939 1.18622 1.94246H0.779054C0.739906 1.94246 0.707334 1.97279 0.704645 2.01179L0.448386 5.59787C0.446891 5.61864 0.454067 5.63896 0.468262 5.6542C0.482457 5.66929 0.50218 5.67796 0.52295 5.67796H4.66248C4.68325 5.67796 4.70297 5.66929 4.71717 5.6542C4.73136 5.63896 4.73854 5.61864 4.73704 5.59787L4.48078 2.01179C4.47809 1.97279 4.44552 1.94246 4.40637 1.94246H4.0122ZM3.56394 1.4942V1.41949C3.56394 0.883072 3.12913 0.44826 2.59271 0.44826C2.0563 0.44826 1.62148 0.883072 1.62148 1.41949V1.4942H3.56394Z"
+                                            fill="black" />
+                                    </svg>
+
+                                    <!-- Added / Check Icon -->
+                                    <svg x-show="added" class="w-5 h-5 absolute inset-0 m-auto" viewBox="0 0 6 7"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M1.18056 1.49991H0.782031C0.506648 1.49991 0.278062 1.71275 0.258413 1.98753L0.00132988 5.58732C-0.0090195 5.73266 0.0413753 5.87575 0.140669 5.9824C0.240113 6.08904 0.379157 6.14963 0.524948 6.14963H4.6803C4.82609 6.14963 4.96513 6.08904 5.06458 5.9824C5.16387 5.87575 5.21427 5.73266 5.20392 5.58732L4.94683 1.98753C4.92718 1.71275 4.6986 1.49991 4.42321 1.49991H4.02754V1.42492C4.02754 0.637912 3.38963 0 2.60262 0C1.84442 0 1.14366 0.603864 1.17771 1.42492C1.17876 1.44981 1.17966 1.47486 1.18056 1.49991ZM3.57756 1.49991V1.42492C3.57756 0.886447 3.14109 0.449973 2.60262 0.449973C2.06416 0.449973 1.62768 0.886447 1.62768 1.42492V1.49991H3.57756Z"
+                                            fill="black" />
+                                    </svg>
+                                </button>
+
+                            </div>
+
+                            {{-- <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
 
                                 @if (!empty($sizes))
                                     <!-- 🟢 Has sizes -->
@@ -393,7 +501,7 @@
                                         </svg>
                                     </button>
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 @empty

@@ -12,17 +12,18 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // 🔹 Load essential data
+        // Load essential data
         $types = Type::select('id', 'type', 'slug')->get();
         $categories = Category::all();
 
-        // 🔹 Fetch random items with relationships
+        // Fetch random items
         $items = Item::with(['category', 'type'])
-            ->inRandomOrder()
+            ->orderBy('created_at', 'asc')
             ->take(12)
             ->get()
             ->map(function ($item) {
-                // ✅ Decode colors safely
+
+                // Decode color JSON
                 $colors = is_array($item->color)
                     ? $item->color
                     : json_decode($item->color ?? '[]', true);
@@ -31,32 +32,20 @@ class HomeController extends Controller
                     $colors = [];
                 }
 
-                $firstColor = $colors[0] ?? [];
-                $firstName = $firstColor['name'] ?? null;
-                $firstImage = $firstColor['images'][0] ?? null;
-
-                // ✅ Decode sizes safely
+                // Decode sizes JSON
                 $sizes = is_array($item->size)
                     ? $item->size
                     : json_decode($item->size ?? '[]', true);
 
-                if (!is_array($sizes) || empty($sizes)) {
+                if (!is_array($sizes)) {
                     $sizes = [];
                 }
 
-                // ✅ Return clean structured data
-                return [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'slug' => $item->slug,
-                    'image' => $firstImage ? asset($firstImage) : asset('assets/images/default.jpg'),
-                    'price' => (float) $item->price,
-                    'discount' => (float) ($item->discount ?? 0),
-                    'sizes' => $sizes,
-                    'status' => (bool) ($item->status ?? false),
-                    'color' => $firstName,
-                    'type' => $item->type->slug,
-                ];
+                // Keep full structure exactly as the view expects
+                $item->color = $colors;
+                $item->size = $sizes;
+
+                return $item;
             });
 
         return view('frontend.home', compact('types', 'categories', 'items'));

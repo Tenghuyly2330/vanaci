@@ -15,10 +15,10 @@
     </section>
 
     <!-- Items Section -->
-    <section class="mb-16">
+    <section>
         @forelse ($orderedGroupedItems as $typeName => $items)
             <div class="px-4 py-8">
-                <h2 class="text-2xl font-bold uppercase mb-6 tracking-wide">{{ $typeName }}</h2>
+                <h2 class="text-[20px] text-center mb-6 tracking-wide">{{ $typeName }}</h2>
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @foreach ($items as $item)
