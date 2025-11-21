@@ -112,7 +112,7 @@
         <!-- LIGHTBOX POPUP -->
         <div x-show="lightboxOpen"
              x-transition.opacity x-cloak
-             class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-center p-4"
+             class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-centera"
              @click.self="closeLightbox()">
 
             <button @click="closeLightbox()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
