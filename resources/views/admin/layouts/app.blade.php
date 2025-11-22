@@ -78,6 +78,14 @@
                         </li>
 
                         <li
+                            class="nav-link {{ Request::is('subcategory') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
+                            <a href="{{ url('subcategory') }}">
+                                <i class='bx bx-category-alt icon'></i>
+                                <span class="text nav-text">Sub Category</span>
+                            </a>
+                        </li>
+
+                        <li
                             class="nav-link {{ Request::is('item_backend') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
                             <a href="{{ url('item_backend') }}">
                                 <i class='bx bx-package icon'></i>

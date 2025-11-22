@@ -23,13 +23,11 @@ class CategoryController extends Controller
         // Pagination (10 per page)
         // $data['categories'] = $query->paginate(2)->withQueryString();
 
-        $data['categories'] = $query->get();
+        $data['categories'] = $query->orderBy('created_at', 'asc')->get();
         $data['types'] = Type::all();
 
         return view('admin.categories.index', $data);
     }
-
-
 
     public function create()
     {

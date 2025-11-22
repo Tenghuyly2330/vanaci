@@ -78,6 +78,9 @@
                                     value="{{ $col['name'] }}" placeholder="Color name" class="border p-2 rounded">
                                 <input type="color" name="colors[{{ $i }}][code]"
                                     value="{{ $col['code'] }}" class="border rounded p-1 w-16 h-10">
+                                <input type="number" name="colors[{{ $i }}][stock]"
+                                    value="{{ $col['stock'] ?? 1 }}" min="0" placeholder="Stock"
+                                    class="border p-2 rounded">
                                 <input type="file" name="colors[{{ $i }}][images][]" multiple
                                     class="color-image-input" data-index="{{ $i }}">
                             </div>
@@ -92,7 +95,8 @@
                                             <button type="button"
                                                 class="absolute top-0 right-0 bg-red-600 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center hover:bg-red-700 remove-existing"
                                                 data-path="{{ $img }}">✕</button>
-                                            <input type="hidden" name="colors[{{ $i }}][existing_images][]"
+                                            <input type="hidden"
+                                                name="colors[{{ $i }}][existing_images][]"
                                                 value="{{ $img }}">
                                         </div>
                                     @endforeach
@@ -104,10 +108,10 @@
                     @endforeach
                 </div>
 
-                <button type="button" id="addColorBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded mt-2">
-                    + Add Color
-                </button>
+                <button type="button" id="addColorBtn" class="bg-[#613bf1] text-white px-3 py-1 rounded mt-2">+ Add
+                    Color</button>
             </div>
+
 
             {{-- Type / Category --}}
             <div>
@@ -115,8 +119,8 @@
                 <div class="flex gap-4">
                     @foreach ($types as $type)
                         <label class="flex items-center gap-2">
-                            <input class="text-[#613bf1]" type="radio" name="type_id" value="{{ $type->id }}" class="type-radio"
-                                {{ $item_backend->type_id == $type->id ? 'checked' : '' }}>
+                            <input class="type-radio" type="radio" name="type_id" value="{{ $type->id }}"
+                                {{ ($item_backend->type_id ?? old('type_id')) == $type->id ? 'checked' : '' }}>
                             {{ $type->type }}
                         </label>
                     @endforeach
@@ -127,15 +131,35 @@
                 <label>Category</label>
                 <div id="category_group" class="flex flex-wrap gap-4">
                     @foreach ($categories as $cat)
-                        <label class="flex items-center gap-2 category-item" data-type-id="{{ $cat->type_id }}"
-                            style="{{ $item_backend->type_id != $cat->type_id ? 'display:none;' : '' }}">
-                            <input class="text-[#613bf1]" type="radio" name="category_id" value="{{ $cat->id }}"
-                                {{ $item_backend->category_id == $cat->id ? 'checked' : '' }}>
+                        <label class="category-item flex items-center gap-2" data-type-id="{{ $cat->type_id }}"
+                            style="display: none;">
+                            <input class="category-radio" type="radio" name="category_id"
+                                value="{{ $cat->id }}"
+                                {{ ($item_backend->category_id ?? old('category_id')) == $cat->id ? 'checked' : '' }}>
                             {{ $cat->name }}
                         </label>
                     @endforeach
                 </div>
             </div>
+
+            <div>
+                <label>Sub Category</label>
+                <div id="subcategory_wrapper">
+                    <div id="subcategory_group" class="flex flex-wrap gap-4">
+                        @foreach ($subcategories as $sub)
+                            <label class="subcategory-item flex items-center gap-2"
+                                data-category-id="{{ $sub->category_id }}" style="display: none;">
+                                <input class="subcategory-radio" type="radio" name="subcategory_id"
+                                    value="{{ $sub->id }}"
+                                    {{ ($item_backend->subcategory_id ?? old('subcategory_id')) == $sub->id ? 'checked' : '' }}>
+                                {{ $sub->name }}
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+
 
             {{-- Submit --}}
             <div class="flex justify-between mt-6">
@@ -186,6 +210,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input type="text" name="colors[${index}][name]" placeholder="Color name" class="border p-2 rounded text-sm">
                     <input type="color" name="colors[${index}][code]" class="border rounded p-1 w-16 h-10">
+                    <input type="number" name="colors[${index}][stock]" placeholder="Stock" min="1" value="1" class="border p-2 rounded text-sm">
                     <input type="file" name="colors[${index}][images][]" multiple class="color-image-input" data-index="${index}">
                 </div>
                 <div id="color-preview-${index}" class="flex flex-wrap gap-2 mt-3 bg-gray-50 p-2 rounded min-h-[50px]">
@@ -271,20 +296,70 @@
             }
         });
 
-        document.querySelectorAll('.type-radio').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const selectedType = this.value;
+        document.addEventListener("DOMContentLoaded", function() {
+            const typeRadios = document.querySelectorAll('.type-radio');
+            const categoryItems = document.querySelectorAll('.category-item');
+            const categoryRadios = document.querySelectorAll('.category-radio');
+            const subcategoryItems = document.querySelectorAll('.subcategory-item');
+            const subcategoryWrapper = document.getElementById('subcategory_wrapper');
 
-                document.querySelectorAll('#category_group .category-item').forEach(item => {
-                    const typeId = item.dataset.typeId;
-
-                    // Show categories belonging to selected type
-                    if (typeId == selectedType) {
+            // ---------- FUNCTIONS ----------
+            function showCategoriesByType(typeId) {
+                let hasCategory = false;
+                categoryItems.forEach(item => {
+                    if (item.dataset.typeId == typeId) {
                         item.style.display = 'flex';
+                        hasCategory = true;
                     } else {
                         item.style.display = 'none';
-                        item.querySelector('input').checked = false; // uncheck invalid category
+                        item.querySelector('input').checked = false;
                     }
+                });
+                return hasCategory;
+            }
+
+            function showSubcategoriesByCategory(categoryId) {
+                let hasSub = false;
+                subcategoryItems.forEach(item => {
+                    if (item.dataset.categoryId == categoryId) {
+                        item.style.display = 'flex';
+                        hasSub = true;
+                    } else {
+                        item.style.display = 'none';
+                        item.querySelector('input').checked = false;
+                    }
+                });
+                subcategoryWrapper.style.display = hasSub ? 'block' : 'none';
+            }
+
+            // ---------- INITIAL STATE (Edit / Old Values) ----------
+            const checkedType = document.querySelector('.type-radio:checked');
+            if (checkedType) {
+                showCategoriesByType(checkedType.value);
+
+                const checkedCategory = document.querySelector('.category-radio:checked');
+                if (checkedCategory) {
+                    showSubcategoriesByCategory(checkedCategory.value);
+                } else {
+                    subcategoryWrapper.style.display = 'none';
+                }
+            } else {
+                subcategoryWrapper.style.display = 'none';
+            }
+
+            // ---------- EVENT LISTENERS ----------
+            typeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    showCategoriesByType(this.value);
+                    // Reset subcategory
+                    subcategoryWrapper.style.display = 'none';
+                    subcategoryItems.forEach(item => item.querySelector('input').checked = false);
+                });
+            });
+
+            categoryRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    showSubcategoriesByCategory(this.value);
                 });
             });
         });

@@ -137,7 +137,10 @@
                                 <div class="flex flex-col justify-between h-12">
                                     <p class="p-0 uppercase">{{ $item->name }}</p>
                                     <p class="text-[12px]">{{ $item->type->type ?? '—' }} -
-                                        {{ $item->category->name ?? '—' }}</p>
+                                        {{ $item->category->name ?? '' }} @if (!empty($item->subcategory->name))
+                                            - {{ $item->subcategory->name }}
+                                        @endif
+                                    </p>
                                 </div>
 
                             </td>
@@ -181,12 +184,12 @@
                                     @foreach ($colors as $color)
                                         <div class="flex items-center gap-2">
                                             {{-- Color box --}}
-                                            <span class="inline-block w-4 h-4 rounded border border-gray-400"
-                                                style="background-color: {{ $color['code'] ?? '#fff' }}"></span>
+                                            {{-- <span class="inline-block w-4 h-4 rounded border border-gray-400"
+                                                style="background-color: {{ $color['code'] ?? '#fff' }}"></span> --}}
                                             {{-- Color name and code --}}
-                                            {{-- <span class="text-[12px] uppercase">
-                                                {{ $color['name'] ?? 'N/A' }} ({{ $color['code'] ?? '' }})
-                                            </span> --}}
+                                            <span class="text-[12px]">
+                                                {{ $color['name'] }} /
+                                            </span>
                                         </div>
                                     @endforeach
                                 </div>

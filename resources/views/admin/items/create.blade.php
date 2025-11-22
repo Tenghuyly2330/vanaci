@@ -12,7 +12,6 @@
                     <label class="block text-sm font-medium text-[#000]">Name</label>
                     <input type="text" name="name" class="mt-1 block w-full p-2 border rounded-md text-sm">
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-[#000]">Price</label>
                     <input type="number" step="0.01" name="price"
@@ -41,6 +40,13 @@
                 <label for="status_new" class="text-sm font-medium text-gray-700">New</label>
             </div>
 
+            <div class="flex items-center gap-2">
+                <input type="hidden" name="best_sellers" value="0">
+                <input type="checkbox" name="best_sellers" value="1" id="best_sellers"
+                    class="form-checkbox text-[#613bf1]">
+                <label for="best_sellers" class="text-sm font-medium text-gray-700">Best Seller</label>
+            </div>
+
 
             {{-- =============== DYNAMIC SIZES =============== --}}
             <div>
@@ -58,7 +64,7 @@
                     Color</button>
             </div>
 
-            {{-- =============== TYPE SELECTION =============== --}}
+            {{-- TYPE --}}
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Type</label>
                 <div id="type_group" class="flex flex-wrap gap-4">
@@ -66,14 +72,14 @@
                         <label class="flex items-center space-x-2 cursor-pointer">
                             <input type="radio" name="type_id" value="{{ $type->id }}"
                                 class="form-radio text-[#613bf1] type-radio">
-                            <span class="text-gray-800">{{ $type->type }}</span>
+                            <span>{{ $type->type }}</span>
                         </label>
                     @endforeach
                 </div>
             </div>
 
-            {{-- =============== CATEGORY FILTERED BY TYPE =============== --}}
-            <div>
+            {{-- CATEGORY --}}
+            <div id="category_wrapper" class="hidden">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
                 <div id="category_group" class="flex flex-wrap gap-4">
                     @foreach ($categories as $category)
@@ -81,11 +87,27 @@
                             data-type-id="{{ $category->type_id }}">
                             <input type="radio" name="category_id" value="{{ $category->id }}"
                                 class="form-radio text-[#613bf1]">
-                            <span class="text-gray-800">{{ $category->name }}</span>
+                            <span>{{ $category->name }}</span>
                         </label>
                     @endforeach
                 </div>
             </div>
+
+            {{-- SUBCATEGORY --}}
+            <div id="subcategory_wrapper" class="hidden">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sub Category</label>
+                <div id="subcategory_group" class="flex flex-wrap gap-4">
+                    @foreach ($subcategories as $subcategory)
+                        <label class="flex items-center space-x-2 cursor-pointer subcategory-item"
+                            data-category-id="{{ $subcategory->category_id }}">
+                            <input type="radio" name="subcategory_id" value="{{ $subcategory->id }}"
+                                class="form-radio text-[#613bf1]">
+                            <span>{{ $subcategory->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
 
             {{-- =============== SUBMIT ACTIONS =============== --}}
             <div class="flex justify-between mt-6">
@@ -98,7 +120,6 @@
 
     {{-- ================= JAVASCRIPT ================= --}}
     <script>
-
         ClassicEditor
             .create(document.querySelector('#description'), {
                 toolbar: [
@@ -139,6 +160,7 @@
                     <input type="text" name="colors[${index}][name]" placeholder="Color name"
                         class="border rounded p-2 text-sm">
                     <input type="color" name="colors[${index}][code]" class="border rounded p-1 w-16 h-10">
+                    <input type="number" name="colors[${index}][stock]" placeholder="Stock" min="0" value="1" class="border rounded p-2 text-sm w-full">
                     <input type="file" name="colors[${index}][images][]" multiple accept="image/*"
                         class="block border rounded p-1 text-sm color-image-input"
                         data-index="${index}">
@@ -205,24 +227,91 @@
         }
 
         // ---------------- TYPE → CATEGORY FILTER ----------------
+        // TYPE → CATEGORY
         const typeRadios = document.querySelectorAll('.type-radio');
         const categoryItems = document.querySelectorAll('.category-item');
+        const subcategoryItems = document.querySelectorAll('.subcategory-item');
 
         typeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
-                const selectedTypeId = this.value;
+                const typeId = this.value;
+
+                // Show only categories that match this type
                 categoryItems.forEach(item => {
-                    if (item.dataset.typeId === selectedTypeId) {
+                    if (item.dataset.typeId === typeId) {
                         item.style.display = 'flex';
                     } else {
                         item.style.display = 'none';
-                        item.querySelector('input[type="radio"]').checked = false;
+                        item.querySelector('input').checked = false;
+                    }
+                });
+
+                // Hide all subcategories until category selected
+                subcategoryItems.forEach(item => {
+                    item.style.display = 'none';
+                    item.querySelector('input').checked = false;
+                });
+            });
+        });
+
+        // CATEGORY → SUBCATEGORY
+        const categoryRadios = document.querySelectorAll('input[name="category_id"]');
+
+        categoryRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const categoryId = this.value;
+
+                subcategoryItems.forEach(item => {
+                    if (item.dataset.categoryId === categoryId) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                        item.querySelector('input').checked = false;
                     }
                 });
             });
         });
 
-        // Hide all categories initially
+        document.querySelectorAll('input[name="type_id"]').forEach(typeRadio => {
+            typeRadio.addEventListener('change', function() {
+                const selectedType = this.value;
+
+                let hasCategory = false;
+
+                // Check if any category belongs to the selected type
+                document.querySelectorAll('.category-item').forEach(cat => {
+                    if (cat.dataset.typeId === selectedType) {
+                        hasCategory = true;
+                    }
+                });
+
+                // Show category only if exists
+                document.getElementById('category_wrapper').classList.toggle('hidden', !hasCategory);
+
+                // Hide subcategory until category is chosen
+                document.getElementById('subcategory_wrapper').classList.add('hidden');
+            });
+        });
+
+        // When category changes → show subcategory only if exists
+        document.querySelectorAll('input[name="category_id"]').forEach(categoryRadio => {
+            categoryRadio.addEventListener('change', function() {
+                const selectedCategory = this.value;
+
+                let hasSub = false;
+
+                document.querySelectorAll('.subcategory-item').forEach(sub => {
+                    if (sub.dataset.categoryId === selectedCategory) {
+                        hasSub = true;
+                    }
+                });
+
+                document.getElementById('subcategory_wrapper').classList.toggle('hidden', !hasSub);
+            });
+        });
+
+        // Hide everything initially
         categoryItems.forEach(item => item.style.display = 'none');
+        subcategoryItems.forEach(item => item.style.display = 'none');
     </script>
 </x-app-layout>

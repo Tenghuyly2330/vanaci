@@ -53,3 +53,25 @@
         </dialog>
     </el-dialog>
 </form>
+
+<script>
+    const typeRadios = document.querySelectorAll('.type-radio');
+        const categoryItems = document.querySelectorAll('.category-item');
+
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedTypeId = this.value;
+                categoryItems.forEach(item => {
+                    if (item.dataset.typeId === selectedTypeId) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                        item.querySelector('input[type="radio"]').checked = false;
+                    }
+                });
+            });
+        });
+
+        // Hide all categories initially
+        categoryItems.forEach(item => item.style.display = 'none');
+</script>

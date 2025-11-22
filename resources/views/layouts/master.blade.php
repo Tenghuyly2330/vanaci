@@ -90,9 +90,10 @@
             offset: 10,
         });
     </script>
-
-    {{-- <script>
+    <script>
         document.addEventListener('alpine:init', () => {
+
+            /* ---------------- CART STORE ---------------- */
             Alpine.store('cart', {
                 items: JSON.parse(localStorage.getItem('cart_items') || '[]'),
 
@@ -102,24 +103,25 @@
 
                 get total() {
                     return this.items.reduce((sum, item) => {
-                        const price = item.discount && item.discount > 0 ?
+                        const price = item.discount > 0 ?
                             item.price * (1 - item.discount / 100) :
                             item.price;
+
                         return sum + price * (item.qty || 0);
                     }, 0).toFixed(2);
                 },
 
                 add(item) {
-                    // Ensure qty is a number and at least 1
-                    const qtyToAdd = Number(item.qty) && Number(item.qty) > 0 ? Number(item.qty) : 1;
+                    const qtyToAdd = item.qty > 0 ? Number(item.qty) : 1;
+
                     const existing = this.items.find(i =>
-                        i.name === item.name &&
-                        i.size === item.size &&
-                        i.color === item.color
+                        i.slug === item.slug &&
+                        i.color === item.color &&
+                        i.size === item.size
                     );
 
                     if (existing) {
-                        existing.qty = (existing.qty || 0) + qtyToAdd;
+                        existing.qty += qtyToAdd;
                         this.toast(`Increased quantity: ${item.name}`);
                     } else {
                         this.items.push({
@@ -128,13 +130,14 @@
                         });
                         this.toast(`${item.name} added to cart`);
                     }
+
                     this.save();
                 },
 
                 increase(index) {
-                    this.items[index].qty = (this.items[index].qty || 0) + 1;
-                    this.save();
+                    this.items[index].qty++;
                     this.toast(`Increased quantity: ${this.items[index].name}`);
+                    this.save();
                 },
 
                 decrease(index) {
@@ -152,8 +155,8 @@
                 remove(index) {
                     const removedItem = this.items[index];
                     this.items.splice(index, 1);
-                    this.save();
                     this.toast(`Removed: ${removedItem.name}`);
+                    this.save();
                 },
 
                 save() {
@@ -166,70 +169,105 @@
                     t.className =
                         'fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg text-sm animate-fadeIn z-[999]';
                     document.body.appendChild(t);
+
                     setTimeout(() => {
                         t.classList.add('opacity-0', 'transition', 'duration-500');
                         setTimeout(() => t.remove(), 500);
                     }, 1500);
                 },
 
+
                 checkout() {
-                    if (this.items.length === 0) return alert("Cart is empty!");
-                    const items = this.items.map(i => {
-                        const finalPrice = i.discount && i.discount > 0 ?
+                    if (this.items.length === 0) {
+                        this.toast("❌ Cart is empty!");
+                        return;
+                    }
+
+                    // Check for stock issues
+                    const invalidItems = this.items.filter(i => i.qty > i.stock);
+                    if (invalidItems.length > 0) {
+                        let msg = "❗ Some items exceed stock:\n";
+                        invalidItems.forEach(i => {
+                            msg += `${i.name} → Qty: ${i.qty}, Stock: ${i.stock}\n`;
+                        });
+                        this.toast(msg);
+                        return;
+                    }
+
+                    // Build order message with links dynamically
+                    const itemsText = this.items.map(i => {
+                        const price = i.discount > 0 ?
                             (i.price * (1 - i.discount / 100)).toFixed(2) :
                             i.price.toFixed(2);
 
-                        const details = [];
-                        if (i.size) details.push(`Size: ${i.size}`);
-                        if (i.color) details.push(`Color: ${i.color}`);
+                        // Ensure URL exists and trim extra spaces
+                        const itemUrl = i.url ? i.url.trim() : '';
+                        return `📌 ${i.name} $${price} x ${i.qty} (Color: ${i.color}, Size: ${i.size})\n${itemUrl}`;
+                    }).join("\n\n");
 
-                        return `${i.name} - $${finalPrice} x ${i.qty}${details.length ? ` (${details.join(", ")})` : ""}`;
-                    }).join("\n");
+                    const message = encodeURIComponent(
+                        `🛒 My Order:\n${itemsText}\n\nTotal: $${this.total}`
+                    );
 
-                    const total = this.total;
-                    const message = encodeURIComponent(`🛒 My Order:\n${items}\n\nTotal: $${total}`);
-                    const telegramLink = `https://t.me/+855967777516?text=${message}`;
-                    window.open(telegramLink, '_blank');
+                    this.toast("✅ Redirecting to Telegram...");
+                    setTimeout(() => {
+                        window.open(`https://t.me/+855967777516?text=${message}`, "_blank");
+                    }, 1000);
+                }
+
+            });
+
+
+            /* ---------------- FAVORITE STORE ---------------- */
+            Alpine.store('favorite', {
+                items: JSON.parse(localStorage.getItem('favorite_items') || '[]'),
+
+                get count() {
+                    return this.items.length;
+                },
+
+                add(item) {
+                    const exists = this.items.find(i =>
+                        i.slug === item.slug &&
+                        i.color === item.color
+                    );
+
+                    if (exists) {
+                        return this.toast(`${item.name} already in favorites`);
+                    }
+
+                    this.items.push(item);
+                    this.save();
+                    this.toast(`${item.name} added to favorites`);
+                },
+
+                remove(index) {
+                    const removed = this.items[index];
+                    this.items.splice(index, 1);
+                    this.save();
+                    this.toast(`Removed: ${removed.name} from favorite`);
+                },
+
+                save() {
+                    localStorage.setItem('favorite_items', JSON.stringify(this.items));
+                },
+
+                toast(message) {
+                    const t = document.createElement('div');
+                    t.textContent = message;
+                    t.className =
+                        'fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg text-sm animate-fadeIn z-[999]';
+                    document.body.appendChild(t);
+
+                    setTimeout(() => {
+                        t.classList.add('opacity-0', 'transition', 'duration-500');
+                        setTimeout(() => t.remove(), 500);
+                    }, 1500);
                 }
             });
+
         });
-    </script> --}}
-
-<script>
-document.addEventListener('alpine:init', () => {
-    Alpine.store('cart', {
-        items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
-
-        get count() {
-            return this.items.length;
-        },
-
-        add(item) {
-            if (!this.items.find(i => i.id === item.id)) {
-                this.items.push(item);
-                localStorage.setItem('cartItems', JSON.stringify(this.items));
-                this.toast(`${item.name} added to cart`);
-            }
-        },
-
-        remove(id) {
-            const item = this.items.find(i => i.id === id);
-            this.items = this.items.filter(i => i.id !== id);
-            localStorage.setItem('cartItems', JSON.stringify(this.items));
-            if(item) this.toast(`${item.name} removed from cart`);
-        },
-
-        toast(message) {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.className = 'fixed bottom-4 right-4 bg-black text-white px-4 py-2 rounded shadow-lg opacity-90 z-50';
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
-        }
-    });
-});
-</script>
-
+    </script>
 
     <script>
         var swiper = new Swiper(".mySwiper", {

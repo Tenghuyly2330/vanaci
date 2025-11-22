@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Frontend\SearchController;
 use App\Http\Controllers\Frontend\ExploreController;
 use App\Http\Controllers\Admin\ItemBackendController;
+use App\Http\Controllers\Admin\SubCategoryController;
+use App\Models\SubCategory;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
@@ -32,6 +34,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('category', CategoryController::class)->except(['destroy', 'show']);
     Route::get('category/delete/{category}', [CategoryController::class, 'delete'])->name('category.delete');
+
+    Route::resource('subcategory', SubCategoryController::class)->except(['destroy', 'show']);
+    Route::get('subcategory/delete/{subcategory}', [SubCategoryController::class, 'delete'])->name('subcategory.delete');
+
 
     Route::resource('item_backend', ItemBackendController::class)->except(['destroy', 'show']);
     Route::get('item_backend/delete/{item_backend}', [ItemBackendController::class, 'delete'])->name('item_backend.delete');

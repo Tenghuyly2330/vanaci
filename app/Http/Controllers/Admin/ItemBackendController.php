@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Item;
 use App\Models\Type;
 use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -32,29 +33,40 @@ class ItemBackendController extends Controller
 
         $items = $query->paginate(6)->withQueryString();
 
-        // Get types for dropdown
+        // Types always available
         $types = Type::all();
 
-        // If type is selected, show only categories for that type
+        // Categories follow Type
         if ($request->filled('type_id')) {
-            $categories = Category::whereHas('items', function ($q) use ($request) {
-                $q->where('type_id', $request->type_id);
-            })->get();
+            $categories = Category::where('type_id', $request->type_id)->get();
         } else {
             $categories = Category::all();
         }
 
-        return view('admin.items.index', compact('items', 'types', 'categories'));
+        // Subcategories follow Category
+        if ($request->filled('category_id')) {
+            $subcategories = SubCategory::where('category_id', $request->category_id)->get();
+        } else {
+            $subcategories = collect(); // empty until category selected
+        }
+
+        return view('admin.items.index', compact(
+            'items',
+            'types',
+            'categories',
+            'subcategories'
+        ));
     }
+
 
     public function create()
     {
         $types = Type::all();
         $categories = Category::all();
+        $subcategories = SubCategory::all();
 
-        return view('admin.items.create', compact('types', 'categories'));
+        return view('admin.items.create', compact('types', 'categories', 'subcategories'));
     }
-
 
     public function store(Request $request)
     {
@@ -66,16 +78,19 @@ class ItemBackendController extends Controller
             'discount' => 'nullable|numeric|gte:0',
             'type_id' => 'required|exists:types,id',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:subcategories,id',
             'sizes' => 'nullable|array',
 
             // COLORS
             'colors' => 'nullable|array',
             'colors.*.name' => 'nullable|string|max:50',
+            'colors.*.stock' => 'nullable|string|max:50',
             'colors.*.code' => 'nullable|string|max:10',
             'colors.*.images' => 'nullable|array',
             'colors.*.images.*' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
 
             'status' => 'nullable|boolean',
+            'best_sellers' => 'nullable|boolean',
         ]);
 
         // Auto slug
@@ -88,6 +103,7 @@ class ItemBackendController extends Controller
                 $colorData = [
                     'name' => $color['name'] ?? '',
                     'code' => $color['code'] ?? '',
+                    'stock' => $color['stock'] ?? '',
                     'images' => [],
                 ];
 
@@ -116,9 +132,11 @@ class ItemBackendController extends Controller
             'discount' => $validated['discount'] ?? 0,
             'type_id' => $validated['type_id'],
             'category_id' => $validated['category_id'],
+            'subcategory_id' => $validated['subcategory_id'] ?? null,
             'size' => $request->sizes ?? [],
             'color' => $colors,
             'status' => $request->status ?? false,
+            'best_sellers' => $request->best_sellers ?? false,
         ]);
 
         return redirect()->route('item_backend.index')->with('success', '✅ Item created successfully!');
@@ -129,9 +147,10 @@ class ItemBackendController extends Controller
     {
         $types = Type::all();
         $categories = Category::all();
-        return view('admin.items.edit', compact('item_backend', 'types', 'categories'));
+        $subcategories = SubCategory::all();
+        return view('admin.items.edit', compact('item_backend', 'types', 'categories', 'subcategories'));
     }
-    
+
     public function update(Request $request, Item $item_backend)
     {
         $validated = $request->validate([
@@ -142,10 +161,12 @@ class ItemBackendController extends Controller
             'discount' => 'nullable|numeric|gte:0',
             'type_id' => 'required|exists:types,id',
             'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:subcategories,id',
             'sizes' => 'nullable|array',
 
             'colors' => 'nullable|array',
             'colors.*.name' => 'nullable|string|max:50',
+            'colors.*.stock' => 'nullable|string|max:50',
             'colors.*.code' => 'nullable|string|max:10',
             'colors.*.existing_images' => 'nullable|array',
             'colors.*.images' => 'nullable|array',
@@ -153,6 +174,7 @@ class ItemBackendController extends Controller
 
             'deleted_images' => 'nullable|array',
             'status' => 'nullable|boolean',
+            'best_sellers' => 'nullable|boolean',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['name']);
@@ -175,6 +197,7 @@ class ItemBackendController extends Controller
                 $colorData = [
                     'name' => $color['name'] ?? '',
                     'code' => $color['code'] ?? '',
+                    'stock' => $color['stock'] ?? '',
                     'images' => $color['existing_images'] ?? [],
                 ];
 
@@ -201,9 +224,11 @@ class ItemBackendController extends Controller
             'discount' => $validated['discount'] ?? 0,
             'type_id' => $validated['type_id'],
             'category_id' => $validated['category_id'],
+            'subcategory_id' => $validated['subcategory_id'] ?? null,
             'size' => $request->sizes ?? [],
             'color' => $colors,
             'status' => $request->status ?? false,
+            'best_sellers' => $request->status ?? false,
         ]);
 
         // KEEP PAGE

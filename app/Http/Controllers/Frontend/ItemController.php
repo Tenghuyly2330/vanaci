@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Type;
 use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -13,57 +14,79 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $types = Type::all();
-        $categories = Category::all();
+        $categories = Category::orderBy('created_at', 'asc')->get();
 
-        // ✅ Always eager-load type for filtering
-        $itemsQuery = Item::with('type');
-        $typeName = null;
-        $categoryName = null;
+        // Base query
+        $itemsQuery = Item::with(['type', 'category', 'subcategory']);
+
+        // Initialize variables
         $type = null;
         $category = null;
+        $subcategory = null;
+        $typeName = null;
+        $categoryName = null;
+        $bannerImage = null;
 
-        // 🔹 Type filter
+        // 1️⃣ Type filter
         if ($request->type) {
             $type = Type::where('slug', $request->type)->first();
             if ($type) {
                 $itemsQuery->where('type_id', $type->id);
                 $typeName = $type->type;
 
-                // 🔹 Category filter (optional)
+                // 2️⃣ Category filter
                 if ($request->category) {
                     $category = Category::where('slug', $request->category)
                         ->where('type_id', $type->id)
                         ->first();
-
                     if ($category) {
                         $itemsQuery->where('category_id', $category->id);
                         $categoryName = $category->name;
                     }
                 }
+
+                // 3️⃣ Subcategory filter
+                if ($request->subcategory && $category) {
+                    $subcategory = SubCategory::where('slug', $request->subcategory)
+                        ->where('category_id', $category->id)
+                        ->first();
+                    if ($subcategory) {
+                        $itemsQuery->where('subcategory_id', $subcategory->id);
+                    }
+                }
+
+                // Get subcategories for this category
+                $subcategories = $category ? SubCategory::where('category_id', $category->id)->get() : collect();
             }
+        } else {
+            // No type selected, show all subcategories empty
+            $subcategories = collect();
         }
 
-        // 🔹 "New Arrivals" filter
+        // Optional "New Arrivals" filter
         if ($request->filter === 'new') {
             $itemsQuery->where('status', true);
-
             if (!$type && !$category) {
                 $typeName = 'New Arrivals';
-                $bannerImage = 'banner-1.png';
-            } elseif ($type && !$category) {
-                $typeName = "{$type->type} - New Arrivals";
-                $bannerImage = 'banner-2.png';
-            } elseif ($type && $category) {
-                $typeName = "{$type->type} - New Arrivals";
-                $categoryName = $category->name ?? null;
-                $bannerImage = 'banner-3.png';
             }
         }
 
+        if ($request->filter === 'promotion') {
+            $itemsQuery->where('discount', '!=' , 0);
+            if (!$type && !$category) {
+                $typeName = 'Promotion';
+            }
+        }
 
+         if ($request->filter === 'best_sellers') {
+            $itemsQuery->where('best_sellers', true);
+            if (!$type && !$category) {
+                $typeName = 'Best Sales';
+            }
+        }
 
-        $items = $itemsQuery->get()->map(function ($item) {
-
+        // Get items and map color/image data
+        $items = $itemsQuery->orderBy('created_at', 'asc')->get()->map(function ($item) {
             $colors = is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true);
             $firstColor = $colors[0] ?? null;
             $firstImage = $firstColor['images'][0] ?? null;
@@ -82,14 +105,20 @@ class ItemController extends Controller
             ];
         });
 
+
         return view('frontend.item', compact(
             'items',
             'types',
             'categories',
+            'subcategories',
+            'type',
+            'category',
+            'subcategory',
             'typeName',
             'categoryName'
         ));
     }
+
 
     public function show($slug)
     {

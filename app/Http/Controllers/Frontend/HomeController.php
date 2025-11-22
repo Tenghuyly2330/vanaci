@@ -14,7 +14,7 @@ class HomeController extends Controller
     {
         // Load essential data
         $types = Type::select('id', 'type', 'slug')->get();
-        $categories = Category::all();
+        $categories = Category::orderBy('created_at', 'asc')->get();
 
         // Fetch random items
         $items = Item::with(['category', 'type'])

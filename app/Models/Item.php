@@ -17,8 +17,10 @@ class Item extends Model
         'discount',
         'image',
         'status',
+        'best_sellers',
         'type_id',
-        'category_id'
+        'category_id',
+        'subcategory_id'
     ];
 
     protected $casts = [
@@ -47,5 +49,10 @@ class Item extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCategory::class);
     }
 }
