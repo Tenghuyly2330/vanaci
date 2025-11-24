@@ -52,7 +52,7 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-2 md:grid-cols-4 items-stretch gap-2 px-4 py-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 px-4 max-w-7xl mx-auto py-10">
             @forelse ($items as $item)
                 @php
                     $sizes = is_array($item->size) ? $item->size : json_decode($item->size ?? '[]', true);
@@ -72,11 +72,11 @@
                         @if ($firstImage)
                             <div class="flex items-center gap-3">
                                 <img src="{{ asset($firstImage) }}" alt="{{ $firstColor['name'] ?? 'Color' }}"
-                                    class="w-full h-[300px] object-cover transition">
+                                    class="w-full h-[300px] lg:h-[400px] sm:h-[400px] xl:h-[500px] object-cover">
                             </div>
                         @else
                             <img src="{{ asset('assets/images/default.jpg') }}" alt=""
-                                class="w-full h-[300px] object-cover transition">
+                                class="w-full h-[300px] lg:h-[400px] md:h-[400px] xl:h-[500px] object-cover">
                         @endif
 
                         @if ($item->discount && $item->discount > 0)
@@ -165,6 +165,11 @@
                     No items available in this category.
                 </p>
             @endforelse
+        </div>
+         <div class="hidden md:flex justify-center items-center">
+            <svg width="4" height="136" viewBox="0 0 4 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="4" height="136" fill="black" />
+            </svg>
         </div>
     </section>
 @endsection

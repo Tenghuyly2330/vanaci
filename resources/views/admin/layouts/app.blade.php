@@ -61,7 +61,13 @@
                                 <span class="text nav-text">Dashboard</span>
                             </a>
                         </li>
-
+                        <li
+                            class="nav-link {{ Request::is('banner') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
+                            <a href="{{ url('banner') }}">
+                                <i class='bx bx-image icon'></i>
+                                <span class="text nav-text">Banner</span>
+                            </a>
+                        </li>
                         <li
                             class="nav-link {{ Request::is('type') ? 'bg-[#000] rounded-md !text-[#ffffff]' : '' }}">
                             <a href="{{ url('type') }}">

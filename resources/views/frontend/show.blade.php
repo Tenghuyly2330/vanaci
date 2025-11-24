@@ -68,7 +68,7 @@
         resetSlide();
         startAutoSlide();
     })">
-        <h1 class="text-[16px] font-[700] mb-6 uppercase text-center tracking-wider">Item</h1>
+        <h1 class="text-[20px] md:text-[25px] font-[500] text-center mb-6 tracking-wider">Item</h1>
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- IMAGE SLIDER -->
             <div class="relative flex flex-col items-center select-none col-span-1">
@@ -170,14 +170,14 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
+                {{-- <div class="mt-4">
                     <p class="text-[14px] font-[400] mb-2">Stock</p>
                     <div class="flex gap-3 flex-wrap">
                         <template x-for="(color, index) in colors" :key="index">
                             <span class="px-2 py-1 text-[#000]" x-text="color.stock"></span> /
                         </template>
                     </div>
-                </div>
+                </div> --}}
 
                 <div x-ref="qtyBox" class="mt-4">
                     <p class="text-[14px] font-[400] mb-2">Quantity</p>
@@ -295,10 +295,10 @@
 
     <!-- RELATED ITEMS -->
     <section class="px-4 py-12 border-t">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-2xl font-semibold mb-6">Related Items</h2>
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-[20px] md:text-[25px] font-[500] text-center mb-6 tracking-wider">Similar Items</h2>
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 max-w-7xl mx-auto px-4 py-10">
                 @forelse ($relatedItems as $related)
                     @php
                         $sizes = is_array($related->size) ? $related->size : json_decode($related->size ?? '[]', true);
@@ -321,11 +321,11 @@
                             @if ($firstImage)
                                 <div class="flex items-center gap-3">
                                     <img src="{{ asset($firstImage) }}" alt="{{ $firstColor['name'] ?? 'Color' }}"
-                                        class="w-full h-[300px] object-cover hover:scale-105 transition">
+                                        class="w-full h-[300px] lg:h-[400px] sm:h-[400px] xl:h-[500px] object-cover">
                                 </div>
                             @else
                                 <img src="{{ asset('assets/images/default.jpg') }}" alt=""
-                                    class="w-full h-[300px] object-cover hover:scale-105 transition">
+                                    class="w-full h-[300px] lg:h-[400px] sm:h-[400px] xl:h-[500px] object-cover">
                             @endif
 
                             @if ($related->discount && $related->discount > 0)
@@ -480,6 +480,11 @@
                     </p>
                 @endforelse
             </div>
+        </div>
+        <div class="hidden md:flex justify-center items-center">
+            <svg width="4" height="136" viewBox="0 0 4 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="4" height="136" fill="black" />
+            </svg>
         </div>
     </section>
 @endsection

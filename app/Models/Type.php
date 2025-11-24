@@ -14,6 +14,7 @@ class Type extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'image',
         'type',
         'slug',
     ];

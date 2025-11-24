@@ -29,14 +29,19 @@
             <table class="min-w-full border border-gray-200">
                 <thead class="sticky top-0 z-10 bg-white text-black">
                     <tr>
-                        <th class="text-left py-3 px-4 text-[12px] border-r border-[#fff] w-2/3">Type Name</th>
-                        <th class="text-left py-3 px-4 text-[12px] border-r border-[#fff] w-1/3">Action</th>
+                        <th class="text-left py-3 px-4 text-[12px] border-r border-[#fff] w-1/4">Image</th>
+                        <th class="text-left py-3 px-4 text-[12px] border-r border-[#fff] w-2/4">Type Name</th>
+                        <th class="text-left py-3 px-4 text-[12px] border-r border-[#fff] w-1/4">Action</th>
                     </tr>
                 </thead>
 
                 <tbody class="text-gray-700 max-h-[40vh] overflow-y-auto">
                     @foreach ($types as $index => $type)
                         <tr class="">
+                            <td class="text-left py-3 px-4 text-[12px] md:text-[14px]">
+                                <img src="{{ asset('assets/type/' . $type->image) }}" alt="{{ $type->image }}"
+                                    class="w-16 h-16 object-cover border rounded-md p-1">
+                            </td>
                             <td class="text-left py-3 px-4 text-[12px] md:text-[14px]">
                                 {{ $type->type }}
                             </td>
@@ -45,8 +50,7 @@
                                 <div class="flex items-center gap-2">
                                     <button command="show-modal" commandfor="editType{{ $type->id }}"
                                         class="flex items-center gap-2 bg-[#613bf1] text-[#fff] px-3 py-1 text-[12px] rounded-md">
-                                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt=""
-                                            class="w-4 h-4">
+                                        <img src="{{ asset('assets/images/icons/edit.svg') }}" alt="" class="w-4 h-4">
                                         Edit
                                     </button>
                                     @include('admin.types.edit')
@@ -54,8 +58,7 @@
 
                                     <a class="text-red-500" href="{{ route('type.delete', $type->id) }}" title="Delete"
                                         onclick="event.preventDefault(); deleteRecord('{{ route('type.delete', $type->id) }}')">
-                                        <img src="{{ asset('assets/images/icons/trash.svg') }}" alt=""
-                                            class="w-5 h-5">
+                                        <img src="{{ asset('assets/images/icons/trash.svg') }}" alt="" class="w-5 h-5">
                                     </a>
                                 </div>
                             </td>

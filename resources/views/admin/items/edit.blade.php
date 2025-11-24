@@ -45,6 +45,16 @@
                     <label for="status_new" class="text-sm font-medium text-gray-700">New</label>
                 </div>
             </div>
+            {{-- best seller --}}
+            <div class="flex flex-col gap-2">
+                <label for="" class="text-sm font-medium text-[#000]">Best Sale</label>
+                <div class="flex items-center gap-2">
+                    <input type="hidden" name="best_sellers" value="0">
+                    <input type="checkbox" name="best_sellers" value="1" id="best_sellers"
+                        class="form-checkbox text-[#613bf1]" {{ $item_backend->best_sellers ? 'checked' : '' }}>
+                    <label for="best_sellers" class="text-sm font-medium text-gray-700">Best Sale</label>
+                </div>
+            </div>
 
             {{-- Sizes --}}
             <div>

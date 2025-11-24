@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\SizeController;
@@ -41,6 +42,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('item_backend', ItemBackendController::class)->except(['destroy', 'show']);
     Route::get('item_backend/delete/{item_backend}', [ItemBackendController::class, 'delete'])->name('item_backend.delete');
+
+    Route::resource('banner', BannerController::class)->except(['destroy', 'show']);
+    Route::get('banner/delete/{banner}', [BannerController::class, 'delete'])->name('banner.delete');
 
 });
 

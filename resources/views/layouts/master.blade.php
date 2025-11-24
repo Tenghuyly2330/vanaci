@@ -183,7 +183,7 @@
                         return;
                     }
 
-                    // Check for stock issues
+                    // Check stock
                     const invalidItems = this.items.filter(i => i.qty > i.stock);
                     if (invalidItems.length > 0) {
                         let msg = "❗ Some items exceed stock:\n";
@@ -194,14 +194,20 @@
                         return;
                     }
 
-                    // Build order message with links dynamically
+                    // All good → open policy first
+                    window.dispatchEvent(new CustomEvent('open-policy'));
+                },
+
+                // After user accepts policy, perform the real checkout
+                confirmCheckout() {
+                    // Build message
                     const itemsText = this.items.map(i => {
                         const price = i.discount > 0 ?
                             (i.price * (1 - i.discount / 100)).toFixed(2) :
                             i.price.toFixed(2);
 
-                        // Ensure URL exists and trim extra spaces
                         const itemUrl = i.url ? i.url.trim() : '';
+
                         return `📌 ${i.name} $${price} x ${i.qty} (Color: ${i.color}, Size: ${i.size})\n${itemUrl}`;
                     }).join("\n\n");
 
@@ -210,6 +216,7 @@
                     );
 
                     this.toast("✅ Redirecting to Telegram...");
+
                     setTimeout(() => {
                         window.open(`https://t.me/+855967777516?text=${message}`, "_blank");
                     }, 1000);

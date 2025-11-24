@@ -21,6 +21,7 @@ class ExploreController extends Controller
         $categoryName = null;
         $type = null;
         $category = null;
+        $typeImage = null;
 
         // 🔹 Type filter
         if ($request->type) {
@@ -28,6 +29,7 @@ class ExploreController extends Controller
             if ($type) {
                 $itemsQuery->where('type_id', $type->id);
                 $typeName = $type->type;
+                $typeImage = $type->image;
 
                 // 🔹 Category filter (optional)
                 if ($request->category) {

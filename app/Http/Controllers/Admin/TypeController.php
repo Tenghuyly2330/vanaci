@@ -21,39 +21,86 @@ class TypeController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'type' => 'required|string|max:255',
-        ]);
-        $slug = Str::slug($validated['type'], '-');
-        Type::create([
-            'type' => $validated['type'],
-            'slug' => $slug,
-        ]);
+{
+    $validated = $request->validate([
+        'type' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
 
-        return redirect()->route('type.index')->with('success', 'Created successfully.');
+    $slug = Str::slug($validated['type'], '-');
+
+    // Upload image
+    $imageName = null;
+    if ($request->hasFile('image')) {
+        $folder = public_path('assets/type');
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
+
+        $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
+        $request->image->move($folder, $imageName);
     }
 
-    public function edit(string $id)
-    {
-        $type = Type::findOrFail($id);
-        return view('admin.types.edit', compact('type'));
+    Type::create([
+        'type' => $validated['type'],
+        'slug' => $slug,
+        'image' => $imageName,
+    ]);
+
+    return redirect()->route('type.index')->with('success', 'Created successfully.');
+}
+
+
+
+public function edit(string $id)
+{
+    $type = Type::findOrFail($id);
+    return view('admin.types.edit', compact('type'));
+}
+
+
+
+public function update(Request $request, string $id)
+{
+    $validated = $request->validate([
+        'type' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+    ]);
+
+    $type = Type::findOrFail($id);
+    $slug = Str::slug($validated['type'], '-');
+
+    // If new image uploaded
+    if ($request->hasFile('image')) {
+
+        // create folder if not exist
+        $folder = public_path('assets/type');
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
+
+        // delete old image
+        if ($type->photo && file_exists($folder . '/' . $type->image)) {
+            unlink($folder . '/' . $type->image);
+        }
+
+        // upload new image
+        $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
+        $request->image->move($folder, $imageName);
+    } else {
+        // keep old image
+        $imageName = $type->image;
     }
 
-    public function update(Request $request, string $id)
-    {
-        $validated = $request->validate([
-            'type' => 'required|string|max:255',
-        ]);
-        $type = Type::findOrFail($id);
-        $slug = Str::slug($validated['type'], '-');
+    $type->update([
+        'type' => $validated['type'],
+        'slug' => $slug,
+        'image' => $imageName,
+    ]);
 
-        $type->update([
-            'type' => $validated['type'],
-            'slug' => $slug,
-        ]);
-        return redirect()->route('type.index')->with('success', 'Updated successfully.');
-    }
+    return redirect()->route('type.index')->with('success', 'Updated successfully.');
+}
+
 
     public function delete(string $id)
     {
