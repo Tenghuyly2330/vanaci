@@ -5,14 +5,16 @@ namespace App\Models {
     /**
      * App\Models\Banner
      *
+     * @property string|null $file_type
      * @property string $updated_at
      * @property string $created_at
-     * @property string $image
+     * @property string $file
      * @property int $id
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereId($value)
-     * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereImage($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereFile($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereUpdatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner whereFileType($value)
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<Banner>|Banner query()

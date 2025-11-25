@@ -7,6 +7,7 @@ use App\Models\Type;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 
 class ExploreController extends Controller
 {
@@ -14,6 +15,7 @@ class ExploreController extends Controller
     {
         $types = Type::all();
         $categories = Category::all();
+         $bannerSlide = Banner::get();
 
         // ✅ Eager-load type for filtering
         $itemsQuery = Item::with('type');
@@ -106,6 +108,7 @@ class ExploreController extends Controller
             'types',
             'categories',
             'typeName',
+            'bannerSlide',
             'categoryName'
         ));
     }

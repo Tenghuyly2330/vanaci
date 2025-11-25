@@ -169,7 +169,7 @@
                 </svg>
 
                 {{-- Badge Positioned Absolutely --}}
-                <span x-data class="absolute top-[-4px] right-[-8px]" x-show="$store.cart.count > 0">
+                <span x-data x-cloak class="absolute top-[-4px] right-[-8px]" x-show="$store.cart.count > 0">
                     <span x-text="$store.cart.count"
                         class="flex items-center justify-center h-4 min-w-4 p-0.5 rounded-full text-xs font-medium bg-red-500 text-white leading-none">
                     </span>

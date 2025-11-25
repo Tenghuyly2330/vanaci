@@ -275,26 +275,7 @@
 
     <script>
         var swiper = new Swiper(".mySwiper", {
-            slidesPerView: 3.5,
-
-            breakpoints: {
-                // Mobile
-                0: {
-                    slidesPerView: 1.2,
-                },
-                // Small screens (tablet)
-                640: {
-                    slidesPerView: 2.2,
-                },
-                // Medium screens
-                768: {
-                    slidesPerView: 3,
-                },
-                // Large screens
-                1024: {
-                    slidesPerView: 3.5,
-                }
-            }, // ← FIXED: add comma here
+            slidesPerView: 1,
 
             spaceBetween: 30,
 
@@ -303,10 +284,10 @@
                 clickable: true,
             },
 
-            // autoplay: {
-            //     delay: 2500,
-            //     disableOnInteraction: false,
-            // },
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
         });
     </script>
 </body>

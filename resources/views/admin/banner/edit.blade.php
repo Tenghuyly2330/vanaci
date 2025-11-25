@@ -25,19 +25,23 @@
 
                                 <!-- Image Upload -->
                                 <div class="mt-4">
-                                    <label for="image" class="block text-sm font-medium text-black">Image</label>
-                                    <input type="file" name="image" id="image"
+                                    <label for="file" class="block text-sm font-medium text-black">Image</label>
+                                    <input type="file" name="file" id="file"
                                         class="mt-1 block w-full p-2 border border-black rounded-md bg-white text-sm">
 
-                                    <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                                    <x-input-error class="mt-2" :messages="$errors->get('file')" />
 
-                                    <!-- Current Image Preview -->
-                                    @if ($banner->image)
+                                    @if ($banner->file)
                                         <div class="mt-3">
-                                            <p class="text-sm text-gray-700 mb-1">Current Image:</p>
-                                            <img src="{{ asset('assets/type/' . $banner->image) }}"
-                                                alt="Current Image"
-                                                class="w-24 h-24 object-cover rounded-md border">
+                                            <p class="text-sm text-gray-700 mb-1">Current File:</p>
+
+                                            @if ($banner->file_type == 'image')
+                                                <img src="{{ asset('assets/banner/' . $banner->file) }}"
+                                                    class="w-24 h-24 object-cover rounded-md border">
+                                            @else
+                                                <video src="{{ asset('assets/banner/' . $banner->file) }}"
+                                                    class="w-24 h-24 object-cover rounded-md border" controls></video>
+                                            @endif
                                         </div>
                                     @endif
                                 </div>

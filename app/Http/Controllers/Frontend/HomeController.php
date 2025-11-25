@@ -7,6 +7,7 @@ use App\Models\Type;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 
 class HomeController extends Controller
 {
@@ -15,6 +16,7 @@ class HomeController extends Controller
         // Load essential data
         $types = Type::select('id', 'type', 'slug')->get();
         $categories = Category::orderBy('created_at', 'asc')->get();
+        $bannerSlide = Banner::get();
 
         // Fetch random items
         $items = Item::with(['category', 'type'])
@@ -48,6 +50,6 @@ class HomeController extends Controller
                 return $item;
             });
 
-        return view('frontend.home', compact('types', 'categories', 'items'));
+        return view('frontend.home', compact('types', 'categories', 'items', 'bannerSlide'));
     }
 }

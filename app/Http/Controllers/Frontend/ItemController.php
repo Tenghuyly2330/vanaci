@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Item;
 use App\Models\Type;
 use App\Models\Category;
@@ -15,6 +16,7 @@ class ItemController extends Controller
     {
         $types = Type::all();
         $categories = Category::orderBy('created_at', 'asc')->get();
+         $bannerSlide = Banner::get();
 
         // Base query
         $itemsQuery = Item::with(['type', 'category', 'subcategory']);
@@ -115,7 +117,8 @@ class ItemController extends Controller
             'category',
             'subcategory',
             'typeName',
-            'categoryName'
+            'categoryName',
+            'bannerSlide'
         ));
     }
 

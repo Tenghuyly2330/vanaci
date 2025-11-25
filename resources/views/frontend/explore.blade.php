@@ -2,9 +2,24 @@
 
 @section('content')
     <!-- Banner Section -->
-    <section class="relative h-screen flex items-center justify-center text-center">
+    <section class="relative h-screen md:h-[140vh] flex items-center justify-center text-center overflow-x-hidden">
         <div class="w-full h-full absolute inset-0">
-            <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">
+            <div class="swiper mySwiper h-full">
+                <div class="swiper-wrapper h-full">
+                    @foreach ($bannerSlide as $item)
+                        <div class="swiper-slide h-full">
+                            @if ($item->file_type == 'image')
+                                <img src="{{ asset('assets/banner/' . $item->file) }}" class="w-full h-full object-cover">
+                            @else
+                                <video src="{{ asset('assets/banner/' . $item->file) }}" class="w-full h-full object-cover" autoplay
+                                    muted loop></video>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
 
         <div class="text-white z-30">

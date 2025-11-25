@@ -5,16 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class BannerController extends Controller
 {
-   public function index()
+    public function index()
     {
         $banners = Banner::all();
         return view('admin.banner.index', compact('banners'));
-
     }
+
     public function create()
     {
         return view('admin.banner.create');
@@ -23,84 +22,94 @@ class BannerController extends Controller
     public function store(Request $request)
 {
     $validated = $request->validate([
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+        'file' => 'required|mimes:jpg,jpeg,png,webp,mp4,mov,webm|max:51200',
     ]);
 
-
-    // Upload image
-    $imageName = null;
-    if ($request->hasFile('image')) {
-        $folder = public_path('assets/banner');
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
-        }
-
-        $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
-        $request->image->move($folder, $imageName);
+    $folder = public_path('assets/banner');
+    if (!file_exists($folder)) {
+        mkdir($folder, 0777, true);
     }
 
+    $file = $request->file('file');
+    $extension = $file->extension(); // <-- FIXED (READ BEFORE MOVE)
+
+    $fileName = time() . '_' . uniqid() . '.' . $extension;
+    $file->move($folder, $fileName);
+
+    $fileType = in_array($extension, ['mp4', 'mov', 'webm']) ? 'video' : 'image';
+
     Banner::create([
-        'image' => $imageName,
+        'file' => $fileName,
+        'file_type' => $fileType,
     ]);
 
     return redirect()->route('banner.index')->with('success', 'Created successfully.');
 }
 
 
-
-public function edit(string $id)
-{
-    $banner = Banner::findOrFail($id);
-    return view('admin.banner.edit', compact('banner'));
-}
-
+    public function edit($id)
+    {
+        $banner = Banner::findOrFail($id);
+        return view('admin.banner.edit', compact('banner'));
+    }
 
 
-public function update(Request $request, string $id)
+   public function update(Request $request, $id)
 {
     $validated = $request->validate([
-        'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+        'file' => 'nullable|mimes:jpg,jpeg,png,webp,mp4,mov,webm|max:51200',
     ]);
 
     $banner = Banner::findOrFail($id);
+    $folder = public_path('assets/banner');
 
-    // If new image uploaded
-    if ($request->hasFile('image')) {
+    // If new file uploaded
+    if ($request->hasFile('file')) {
 
-        // create folder if not exist
-        $folder = public_path('assets/banner');
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
+        // Delete old file
+        if ($banner->file && file_exists($folder . '/' . $banner->file)) {
+            unlink($folder . '/' . $banner->file);
         }
 
-        // delete old image
-        if ($banner->photo && file_exists($folder . '/' . $banner->image)) {
-            unlink($folder . '/' . $banner->image);
-        }
+        // Prepare new file
+        $file = $request->file('file');
+        $extension = $file->extension(); // <-- GET EXT BEFORE MOVE
 
-        // upload new image
-        $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
-        $request->image->move($folder, $imageName);
+        $fileName = time() . '_' . uniqid() . '.' . $extension;
+        $file->move($folder, $fileName);
+
+        // Detect type (image OR video)
+        $fileType = in_array($extension, ['mp4', 'mov', 'webm']) ? 'video' : 'image';
+
     } else {
-        // keep old image
-        $imageName = $banner->image;
+        // No new file uploaded → keep old one
+        $fileName = $banner->file;
+        $fileType = $banner->file_type;
     }
 
+    // Update record
     $banner->update([
-        'image' => $imageName,
+        'file' => $fileName,
+        'file_type' => $fileType,
     ]);
 
     return redirect()->route('banner.index')->with('success', 'Updated successfully.');
 }
 
 
-    public function delete(string $id)
+
+    public function delete($id)
     {
-        $i = Banner::where('id', $id)->delete();
-        if($i){
-            return redirect()->route('banner.index')->with('success', 'Deleted successfully');
-        } else {
-            return redirect()->route('banner.index')->with('error', 'Fail to delete data');
+        $banner = Banner::findOrFail($id);
+
+        $folder = public_path('assets/banner');
+
+        if ($banner->file && file_exists($folder . '/' . $banner->file)) {
+            unlink($folder . '/' . $banner->file);
         }
+
+        $banner->delete();
+
+        return redirect()->route('banner.index')->with('success', 'Deleted successfully.');
     }
 }

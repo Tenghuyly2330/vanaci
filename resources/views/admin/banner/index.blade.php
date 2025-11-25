@@ -38,8 +38,11 @@
                     @foreach ($banners as $index => $banner)
                         <tr class="">
                             <td class="text-left py-3 px-4 text-[12px] md:text-[14px]">
-                                <img src="{{ asset('assets/banner/' . $banner->image) }}" alt="{{ $banner->image }}"
-                                    class="w-16 h-16 object-cover border rounded-md p-1">
+                                @if ($banner->file_type == 'image')
+                                    <img src="{{ asset('assets/banner/' . $banner->file) }}" class="w-40 h-auto">
+                                @else
+                                    <video src="{{ asset('assets/banner/' . $banner->file) }}" class="w-40" controls></video>
+                                @endif
                             </td>
 
                             <td class="text-left py-3 px-4">

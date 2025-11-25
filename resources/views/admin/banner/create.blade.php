@@ -22,10 +22,10 @@
 
                                 <!-- Image Upload -->
                                 <div class="mt-4">
-                                    <label for="image" class="block text-sm font-medium text-[#000]">Image</label>
-                                    <input type="file" name="image" id="image"
-                                        class="mt-1 block w-full p-2 border border-[#000] rounded-md text-sm bg-white">
-                                    <x-input-error class="mt-2" :messages="$errors->get('image')" />
+                                    <label for="file" class="block text-sm font-medium text-[#000]">Image or Video</label>
+                                    <input type="file" name="file" accept="image/*,video/*" required>
+
+                                    <x-input-error class="mt-2" :messages="$errors->get('file')" />
                                 </div>
 
                             </div>
