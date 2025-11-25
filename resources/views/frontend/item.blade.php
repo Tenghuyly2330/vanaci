@@ -14,6 +14,10 @@
             <div class="w-full h-full absolute inset-0">
                 <img src="{{ asset('assets/images/banner-1.jpg') }}" alt="" class="w-full h-full object-cover">
             </div>
+        {{-- @elseif ($typeName == 'Skin care')
+            <div class="w-full h-full absolute inset-0">
+                <img src="{{ asset('assets/images/banner-1.jpg') }}" alt="" class="w-full h-full object-cover">
+            </div> --}}
         @else
             <div class="w-full h-full absolute inset-0">
                 <img src="{{ asset('assets/images/banner-2.png') }}" alt="" class="w-full h-full object-cover">

@@ -200,7 +200,6 @@
 
                 // After user accepts policy, perform the real checkout
                 confirmCheckout() {
-                    // Build message
                     const itemsText = this.items.map(i => {
                         const price = i.discount > 0 ?
                             (i.price * (1 - i.discount / 100)).toFixed(2) :
@@ -217,11 +216,9 @@
 
                     this.toast("✅ Redirecting to Telegram...");
 
-                    setTimeout(() => {
-                        window.open(`https://t.me/+855967777516?text=${message}`, "_blank");
-                    }, 1000);
+                    // 👉 OPEN IMMEDIATELY (must be in user click flow)
+                    window.open(`https://t.me/+855967777516?text=${message}`, "_blank");
                 }
-
             });
 
 

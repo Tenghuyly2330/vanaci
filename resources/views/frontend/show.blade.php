@@ -12,6 +12,8 @@
         qty: 1,
         lightboxOpen: false,
         lightboxIndex: 0,
+        showToast: false,
+        toastMessage: '',
 
         get selectedColor() {
             return this.colors?.[this.selectedColorIndex] || null;
@@ -192,12 +194,29 @@
                             class="w-12 h-5 flex items-center justify-center text-center text-[12px] font-[500] bg-[#D9D9D9]"
                             x-text="qty"></span>
 
-                        <button class="w-12 h-5 ml-1 flex items-center justify-center bg-[#D9D9D9]" @click="qty++">
+                        <button
+                            class="w-12 h-5 ml-1 flex items-center justify-center bg-[#D9D9D9]"
+                            @click="
+                                if (qty < selectedColor.stock) {
+                                    qty++;
+                                } else {
+                                    toastMessage = 'Cannot add more than available stock!';
+                                    showToast = true;
+                                    setTimeout(() => showToast = false, 2000);
+                                }
+                            "
+                        >
                             +
                         </button>
                     </div>
                 </div>
-
+                {{-- Alert message --}}
+                <div
+                    x-show="showToast"
+                    x-transition
+                    class="fixed bottom-5 right-5 px-4 py-2 bg-red-600 text-white rounded shadow-lg font-medium"
+                    x-text="toastMessage">
+                </div>
                 <!-- Size Options -->
                 @php
                     $sizes = is_array($item->size) ? $item->size : json_decode($item->size ?? '[]', true);

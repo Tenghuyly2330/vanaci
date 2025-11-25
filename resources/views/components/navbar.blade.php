@@ -533,7 +533,32 @@
                     <div class="text-sm space-y-1 h-[50vh] overflow-y-auto border p-2 mb-4" x-ref="policyBox" @scroll="
                             scrollEnd = $refs.policyBox.scrollTop + $refs.policyBox.clientHeight >= $refs.policyBox.scrollHeight - 2
                         ">
-                        <h2 class="text-[20px] font-semibold mb-3">Exchange policy</h2>
+                         <h2 class="text-[20px] font-semibold py-3">គោលការណ៍ប្តូរទំនិញ</h2>
+
+                        <ul class="space-y-1">
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                អ្នកមានរយៈពេល ១០ ថ្ងៃ បន្ទាប់ពីទិញនៅក្នុងហាង ឬ ទិញ online
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                ទំនិញត្រូវតែនៅថ្មី មិនទាន់ប្រើប្រាស់ និងមិនទាន់បាត់ផ្លាកតម្លៃ
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                អ្នកអាចប្តូរបានតែ ទំហំ ឬ ពណ៌ដែលមានលក់ជាមួយទំនិញដែលបានទិញ ឬក៏ប្តូរទំនិញថ្មី
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                អ្នកអាចប្តូរទំនិញបាននៅគ្រប់សាខា របស់ Clobber ( VANACI Brand មានលក់នៅក្នុងហាង Clobber )
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                ភ្ជាប់ជាមួយវិក័យបត្រ
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                អ្នកអាចប្តូរទំនិញទាំងទិញក្នុងហាង ឬ តាមOnline បានដូចគ្នា
+                            </li>
+                            <li class="list-none before:content-['*'] before:mr-1">
+                                មិនមានការប្តូរប្រាក់វិញ
+                            </li>
+                        </ul>
+                        <h2 class="text-[20px] font-semibold mb-3 py-3">Exchange Policy</h2>
 
                         <ul class="space-y-1">
                             <li class="list-none before:content-['*'] before:mr-1">
@@ -560,32 +585,6 @@
                             </li>
                             <li class="list-none before:content-['*'] before:mr-1">
                                 No refund
-                            </li>
-                        </ul>
-
-                        <h2 class="text-[20px] font-semibold py-3">គោលការណ៍ប្តូរទំនិញ</h2>
-
-                        <ul class="space-y-1">
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                អ្នកមានរយៈពេល ១០ ថ្ងៃ បន្ទាប់ពីទិញនៅក្នុងហាង ឬ ទិញ online
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                ទំនិញត្រូវតែនៅថ្មី មិនទាន់ប្រើប្រាស់ និងមិនទាន់បាត់ផ្លាកតម្លៃ
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                អ្នកអាចប្តូរបានតែ ទំហំ ឬ ពណ៌ដែលមានលក់ជាមួយទំនិញដែលបានទិញ ឬក៏ប្តូរទំនិញថ្មី
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                អ្នកអាចប្តូរទំនិញបាននៅគ្រប់សាខា របស់ Clobber ( VANACI Brand មានលក់នៅក្នុងហាង Clobber )
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                ភ្ជាប់ជាមួយវិក័យបត្រ
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                អ្នកអាចប្តូរទំនិញទាំងទិញក្នុងហាង ឬ តាមOnline បានដូចគ្នា
-                            </li>
-                            <li class="list-none before:content-['*'] before:mr-1">
-                                មិនមានការប្តូរប្រាក់វិញ
                             </li>
                         </ul>
                     </div>
