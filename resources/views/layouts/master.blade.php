@@ -48,6 +48,20 @@
         .prose strong {
             font-size: 14px;
         }
+        .swiper .swiper-pagination-bullet {
+            background-color: #fff;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            margin: 0 5px;
+        }
+
+        .swiper .swiper-pagination .swiper-pagination-bullet-active {
+            width: 14px;
+            height: 4px;
+            border-radius: 10px;
+            background-color: #fff;
+        }
 
         @media (max-width: 639px) {
 

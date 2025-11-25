@@ -1,6 +1,16 @@
 @extends('layouts.master')
 
 @section('content')
+    <style>
+        /* Hide scrollbar but keep scrolling */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+    </style>
     <section class="relative h-screen md:h-[120vh] flex items-center justify-center text-center overflow-x-hidden">
 
         {{-- <div class="w-full h-full absolute inset-0">
@@ -57,7 +67,7 @@
 
     <section>
         @if ($subcategories->count())
-            <div class="flex space-x-2 mt-10 px-4">
+            <div class="flex whitespace-nowrap space-x-2 mt-10 px-4 w-full overflow-x-auto scrollbar-hide">
                 @if ($type && $category)
                     <a href="{{ route('item', ['type' => $type->slug, 'category' => $category->slug]) }}"
                         class="px-3 py-1 text-[14px] md:text-[16px] {{ !$subcategory ? 'font-[700] border-[#000] border-b-2' : '' }}">
