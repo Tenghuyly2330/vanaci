@@ -254,7 +254,7 @@
                                     </button>
 
                                     <div x-show="showSizes" x-transition
-                                        class="absolute bottom-full mb-3 -left-7 bg-white border-black rounded z-50 overflow-hidden">
+                                        class="absolute bottom-full mb-4 -left-7 bg-white border rounded z-30 overflow-hidden">
                                         <div class="flex flex-col gap-2 p-2">
                                             <template x-for="size in item.size" :key="size">
                                                 <button @click="

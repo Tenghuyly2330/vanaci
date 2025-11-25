@@ -111,24 +111,24 @@
                                         </button>
 
                                         <div x-show="showSizes" x-transition
-                                            class="absolute bottom-full mb-3 -left-6 bg-white border rounded z-50 overflow-hidden">
+                                            class="absolute bottom-full mb-4 -left-7 bg-white border rounded z-30 overflow-hidden">
                                             <div class="flex flex-col gap-2 p-2">
                                                 @foreach ($sizes as $size)
                                                     <button
                                                         @click="
-                                                                                                                                                                                                                                                                    selectedSize = '{{ $size }}';
-                                                                                                                                                                                                                                                                    $store.cart.add({
-                                                                                                                                                                                                                                                                        id: '{{ $item->id }}',
-                                                                                                                                                                                                                                                                        name: '{{ $item->name }}',
-                                                                                                                                                                                                                                                                        price: {{ $item->price }},
-                                                                                                                                                                                                                                                                        discount: {{ $item->discount ?? 0 }},
-                                                                                                                                                                                                                                                                        image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
-                                                                                                                                                                                                                                                                        slug: '{{ $item->slug }}',
-                                                                                                                                                                                                                                                                        size: '{{ $size }}',
-                                                                                                                                                                                                                                                                        color: '{{ $firstName }}'
-                                                                                                                                                                                                                                                                    });
-                                                                                                                                                                                                                                                                    showSizes = false;
-                                                                                                                                                                                                                                                                "
+                                                            selectedSize = '{{ $size }}';
+                                                            $store.cart.add({
+                                                                id: '{{ $item->id }}',
+                                                                name: '{{ $item->name }}',
+                                                                price: {{ $item->price }},
+                                                                discount: {{ $item->discount ?? 0 }},
+                                                                image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                                                slug: '{{ $item->slug }}',
+                                                                size: '{{ $size }}',
+                                                                color: '{{ $firstName }}'
+                                                            });
+                                                            showSizes = false;
+                                                        "
                                                         class='border px-2 py-1 rounded text-[12px] uppercase hover:bg-black hover:text-white transition'>
                                                         {{ $size }}
                                                     </button>
@@ -139,17 +139,17 @@
                                         <!-- 🔴 No sizes — Add directly to cart -->
                                         <button
                                             @click="
-                                                                                                                                                                                                                $store.cart.add({
-                                                                                                                                                                                                                    id: '{{ $item->id }}',
-                                                                                                                                                                                                                    name: '{{ $item->name }}',
-                                                                                                                                                                                                                    price: {{ $item->price }},
-                                                                                                                                                                                                                    discount: {{ $item->discount ?? 0 }},
-                                                                                                                                                                                                                    image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
-                                                                                                                                                                                                                    slug: '{{ $item->slug }}',
-                                                                                                                                                                                                                    size: '',
-                                                                                                                                                                                                                    color: '{{ $firstName }}'
-                                                                                                                                                                                                                });
-                                                                                                                                                                                                            "
+                                                $store.cart.add({
+                                                    id: '{{ $item->id }}',
+                                                    name: '{{ $item->name }}',
+                                                    price: {{ $item->price }},
+                                                    discount: {{ $item->discount ?? 0 }},
+                                                    image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                                    slug: '{{ $item->slug }}',
+                                                    size: '',
+                                                    color: '{{ $firstName }}'
+                                                });
+                                            "
                                             class="rounded mt-2 w-full">
                                             <svg class="w-5 h-5" viewBox="0 0 6 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" clip-rule="evenodd"

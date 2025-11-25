@@ -370,7 +370,7 @@
                                 </p>
                             </div>
 
-                            <div>
+                            {{-- <div>
                                 <button x-data="{ added: $store.cart.items.some(i => i.id == '{{ $item->id }}') }"
                                     @click="
                                     added = !added;
@@ -407,9 +407,9 @@
                                     </svg>
                                 </button>
 
-                            </div>
+                            </div> --}}
 
-                            {{-- <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
+                            <div x-data="{ showSizes: false, selectedSize: null }" @click.outside="showSizes = false" class="relative">
 
                                 @if (!empty($sizes))
                                     <!-- 🟢 Has sizes -->
@@ -423,7 +423,7 @@
                                     </button>
 
                                     <div x-show="showSizes" x-transition
-                                        class="absolute bottom-full mb-3 -left-6 bg-white border rounded z-50 overflow-hidden">
+                                        class="absolute bottom-full mb-4 -left-7 bg-white border rounded z-30 overflow-hidden">
                                         <div class="flex flex-col gap-2 p-2">
                                             @foreach ($sizes as $size)
                                                 <button
@@ -471,7 +471,7 @@
                                         </svg>
                                     </button>
                                 @endif
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                 @empty
