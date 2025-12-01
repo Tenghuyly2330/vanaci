@@ -118,13 +118,13 @@
 
                 <button @click="closeLightbox()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
 
-                <div class="max-w-4xl w-full">
-                    <img :src="selectedColor.images[lightboxIndex]" class="w-full h-[500px] object-contain mb-4">
+                <div class="lg:max-w-4xl mx-auto relative w-full h-full">
+                    <img :src="selectedColor.images[lightboxIndex]" class="w-full h-full object-cover lg:contain mb-4">
 
                     <!-- Thumbnails -->
-                    <div class="flex gap-2 justify-center overflow-x-auto">
+                    <div class="absolute left-4 bottom-4 flex flex-col gap-2 justify-center overflow-x-auto">
                         <template x-for="(img, i) in selectedColor.images" :key="i">
-                            <img :src="img" class="w-20 h-20 object-cover border-2 cursor-pointer"
+                            <img :src="img" class="w-14 h-14 object-cover border-2 cursor-pointer"
                                 :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
                                 @click="lightboxIndex = i">
                         </template>

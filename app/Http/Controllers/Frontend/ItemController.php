@@ -128,17 +128,17 @@ class ItemController extends Controller
         $types = Type::all();
         $categories = Category::all();
 
-        // ✅ Get main item
+        // Get main item
         $item = Item::with('type')->where('slug', $slug)->firstOrFail();
 
-        // ✅ Decode JSON fields safely
+        // Decode JSON fields safely
         $item->color = is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true);
         $item->size = is_array($item->size) ? $item->size : json_decode($item->size ?? '[]', true);
 
         $firstColor = $item->color[0] ?? null;
         $item->image = $firstColor['images'][0] ?? 'assets/images/default.jpg';
 
-        // ✅ Related items (same category, exclude itself)
+        //  Related items (same category, exclude itself)
         $relatedItems = Item::with('type')
             ->where('category_id', $item->category_id)
             ->where('id', '!=', $item->id)
@@ -164,7 +164,7 @@ class ItemController extends Controller
                 ];
             });
 
-        // ✅ Optional: show some random products like index
+        //  Optional: show some random products like index
         $items = Item::with('type')
             ->inRandomOrder()
             ->take(12)
@@ -177,7 +177,7 @@ class ItemController extends Controller
                 $firstColor = $colors[0] ?? null;
                 $firstImage = $firstColor['images'][0] ?? null;
 
-                // ✅ Fix relative path issue
+                //  Fix relative path issue
                 if ($firstImage && !str_starts_with($firstImage, '/')) {
                     $firstImage = '/' . ltrim($firstImage, '/');
                 }

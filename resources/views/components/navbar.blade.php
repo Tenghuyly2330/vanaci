@@ -73,23 +73,23 @@
             <!-- Menu Items -->
             <ul class="p-4 space-y-4 text-[#000] mt-4">
                 <li>
-                    <a href="{{ route('item', ['filter' => 'new']) }}" class="block text-[20px] italic">New Arrivals</a>
+                    <a href="{{ route('item', ['filter' => 'new']) }}" class="block text-[20px]">New Arrivals</a>
                 </li>
 
                 <li>
                     <a href="{{ route('item', ['filter' => 'promotion']) }}"
-                        class="block text-[20px] italic">Promotion</a>
+                        class="block text-[20px]">Promotion</a>
                 </li>
 
                 <li>
-                    <a href="{{ route('item', ['filter' => 'best_sellers']) }}" class="block text-[20px] italic">Best
+                    <a href="{{ route('item', ['filter' => 'best_sellers']) }}" class="block text-[20px]">Best
                         Sales</a>
                 </li>
 
                 @foreach ($types as $type)
                     <li x-data="{ open: false }" class="relative">
                         <button @click="open = !open"
-                            class="w-full text-left text-[20px] italic flex justify-between items-center">
+                            class="w-full text-left text-[20px] flex justify-between items-center">
                             {{ $type->type }}
                             <svg :class="open ? 'rotate-180' : ''" class="w-5 h-5 ml-2 transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@
                         @endphp
 
                         @if ($typeCategories->isNotEmpty())
-                            <ul x-show="open" x-transition class="mt-2 pl-4 space-y-1 italic">
+                            <ul x-show="open" x-transition class="mt-2 pl-4 space-y-1">
                                 <li>
                                     <a href="{{ route('item', ['type' => $type->slug]) }}" class="block">All</a>
                                 </li>
@@ -121,38 +121,9 @@
 
             <div class="fixed w-full md:w-96 bottom-4">
                 <div class="flex items-center justify-center gap-2 pt-10">
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M15.3728 0.0756024C15.2937 0.124453 15.2186 0.206451 15.1349 0.216337C14.2492 0.323343 13.5891 0.790331 13.1605 1.54228C12.5918 2.54197 12.0649 3.56666 11.5438 4.5931C10.3664 6.91272 9.19764 9.23719 8.03764 11.5665C7.95564 11.7305 7.8719 11.8171 7.66952 11.8154C7.47819 11.8154 7.42992 11.7148 7.36363 11.5752C5.91982 8.52323 4.47291 5.4728 3.02291 2.42391C2.87345 2.10987 2.68968 1.81212 2.53092 1.50215C2.07905 0.619354 1.34339 0.210521 0.369874 0.190749C0.292527 0.190749 0.215181 0.182608 0.137253 0.173885C0.120969 0.173885 0.106424 0.152949 0 0.0738578C0.167487 0.0395462 0.264022 0.00232621 0.36056 0.00232621C2.28899 -0.000775404 4.21742 -0.000775404 6.14584 0.00232621H6.98387C6.9955 0.0337301 7.00712 0.065133 7.01817 0.0959553C6.94722 0.133756 6.88035 0.190168 6.80417 0.20587C6.55875 0.257046 6.30461 0.273329 6.06269 0.337881C5.29155 0.543169 4.94843 1.20207 5.26247 1.93192C5.85216 3.30031 6.4686 4.65649 7.07516 6.01732C7.58286 7.15542 8.09231 8.29236 8.62617 9.48629C8.69829 9.35137 8.75237 9.25832 8.80064 9.16178C9.8137 7.10696 10.8248 5.04982 11.834 2.99034C11.9827 2.67551 12.1045 2.34868 12.1981 2.01333C12.4964 0.995617 12.0102 0.294265 10.9553 0.190749C10.8666 0.175254 10.7793 0.152695 10.6942 0.123288C10.7011 0.0907214 10.7075 0.057574 10.7145 0.0244255C10.7872 0.0138801 10.8604 0.00708596 10.9338 0.0040708C12.3295 0.0040708 13.7252 0.0040708 15.1209 0.0040708C15.2047 0.0040708 15.2884 0.0505956 15.3728 0.0756024Z"
-                            fill="black" />
-                    </svg>
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M15.1698 11.6013C15.1034 11.5877 15.0358 11.5803 14.968 11.5793C14.4446 11.5083 13.8997 11.4455 13.5397 11.0221C13.1906 10.6224 12.8891 10.1835 12.6412 9.71421C11.0338 6.56026 9.44287 3.39816 7.86841 0.227927C7.74163 -0.0273744 7.56891 0.0238025 7.37525 0.00286661C7.1816 -0.0180693 7.10599 0.0773053 7.03271 0.235488C6.12956 2.16217 5.22991 4.0906 4.31106 6.01089C3.67135 7.35485 3.03571 8.70522 2.33378 10.0184C1.89471 10.8413 1.25267 11.4862 0.240189 11.6019C0.155863 11.6112 0.0796727 11.6909 0 11.738C0.0843251 11.763 0.168656 11.8101 0.252981 11.8107C1.62971 11.8154 3.00605 11.8154 4.382 11.8107C4.48901 11.8107 4.59543 11.7526 4.70244 11.7182C4.59834 11.674 4.49831 11.606 4.39014 11.5891C3.44802 11.4437 2.70015 10.7779 3.14388 9.64617C3.47187 8.81048 3.86965 8.00096 4.24883 7.1862C4.28081 7.11816 4.41572 7.06175 4.50296 7.06117C5.90876 7.0538 7.31418 7.05497 8.71921 7.06466C8.77531 7.0717 8.82919 7.09098 8.87703 7.12112C8.92486 7.15127 8.96548 7.19155 8.99603 7.23912C9.19667 7.60318 9.38044 7.97769 9.55375 8.35629C9.83231 8.96168 10.1248 9.56243 10.358 10.1859C10.5034 10.5743 10.358 10.9488 10.0091 11.178C9.773 11.3321 9.49327 11.4315 9.22052 11.517C9.02046 11.5793 8.79947 11.5752 8.59069 11.6107C8.53893 11.6205 8.49649 11.6828 8.44996 11.7211C8.49754 11.7576 8.55 11.7871 8.60581 11.809C8.67286 11.8184 8.74078 11.82 8.80819 11.8136H12.9081C13.6543 11.8136 14.4004 11.8136 15.1471 11.809C15.2128 11.809 15.2786 11.7462 15.3443 11.7124C15.2906 11.6687 15.2321 11.6315 15.1698 11.6013ZM4.48203 6.68432L6.54887 2.23196L8.73957 6.68432H4.48203Z"
-                            fill="black" />
-                    </svg>
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M15.2471 0.10439C15.1789 0.136443 15.1088 0.164407 15.0372 0.188133C14.64 0.298628 14.2166 0.351549 13.8497 0.525433C13.2489 0.809812 13.0762 1.38555 13.05 2.00432C13.0285 2.50736 13.0279 3.01157 13.0274 3.51636C13.0274 6.17095 13.0274 8.82671 13.0274 11.4836V11.782C12.7471 11.8401 12.5476 11.8174 12.34 11.6017C9.1515 8.28528 5.95646 4.97489 2.75482 1.67051C2.7307 1.65368 2.70475 1.63964 2.67747 1.62864C2.66505 1.68947 2.6567 1.75105 2.65247 1.81299C2.65247 4.31328 2.65247 6.81395 2.65247 9.31502C2.65052 9.6057 2.67523 9.89595 2.72631 10.1821C2.88449 11.0207 3.46547 11.4953 4.40759 11.5848C4.5235 11.5912 4.63888 11.605 4.75303 11.6261C4.79141 11.6348 4.81642 11.7005 4.84725 11.7424C4.81338 11.7691 4.77717 11.7926 4.73907 11.8128C4.71065 11.8184 4.68142 11.8184 4.653 11.8128C3.15143 11.8128 1.64967 11.8128 0.147717 11.8128C0.10983 11.8096 0.0722882 11.8031 0.035481 11.7936L0 11.7116C0.0748329 11.6665 0.154657 11.6302 0.23786 11.6034C0.502467 11.5505 0.780446 11.5453 1.03458 11.4604C1.72023 11.24 2.10639 10.7549 2.16919 10.0338C2.20118 9.66744 2.22095 9.29932 2.22211 8.92887C2.22676 6.83528 2.22676 4.74169 2.22211 2.6481C2.2199 2.33826 2.20049 2.02879 2.16395 1.7211C2.06858 0.892974 1.50041 0.367833 0.583881 0.243962C0.459429 0.227097 0.331491 0.226514 0.209365 0.197437C0.141323 0.181153 0.0831677 0.122998 0.02036 0.0811262C0.0837492 0.0549563 0.146558 0.00726973 0.210529 0.00552507C0.539688 -0.00203511 0.869428 0.0020359 1.19917 0.0020359C2.0715 0.0020359 2.94383 -0.00610676 3.81615 0.0101767C3.97249 0.018611 4.12062 0.0827764 4.23371 0.19104C6.95886 3.03948 9.67859 5.89278 12.3929 8.75091C12.4523 8.82537 12.5077 8.90303 12.5586 8.98353C12.5749 8.81488 12.5877 8.74451 12.5877 8.67415C12.5877 6.67787 12.5877 4.68121 12.5877 2.68416C12.5843 2.36489 12.5649 2.04599 12.5295 1.72867C12.4516 0.972647 11.9759 0.453902 11.2228 0.293975C11.0053 0.248032 10.7814 0.232912 10.5633 0.19104C10.4941 0.178246 10.4331 0.124743 10.3679 0.0904312L10.3976 0.0241352H15.2245L15.2471 0.10439Z"
-                            fill="black" />
-                    </svg>
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M15.1698 11.6013C15.1034 11.5877 15.0358 11.5803 14.968 11.5793C14.4446 11.5083 13.8997 11.4455 13.5397 11.0221C13.1906 10.6224 12.8891 10.1835 12.6412 9.71421C11.0338 6.56026 9.44287 3.39816 7.86841 0.227927C7.74163 -0.0273744 7.56891 0.0238025 7.37525 0.00286661C7.1816 -0.0180693 7.10599 0.0773053 7.03271 0.235488C6.12956 2.16217 5.22991 4.0906 4.31106 6.01089C3.67135 7.35485 3.03571 8.70522 2.33378 10.0184C1.89471 10.8413 1.25267 11.4862 0.240189 11.6019C0.155863 11.6112 0.0796727 11.6909 0 11.738C0.0843251 11.763 0.168656 11.8101 0.252981 11.8107C1.62971 11.8154 3.00605 11.8154 4.382 11.8107C4.48901 11.8107 4.59543 11.7526 4.70244 11.7182C4.59834 11.674 4.49831 11.606 4.39014 11.5891C3.44802 11.4437 2.70015 10.7779 3.14388 9.64617C3.47187 8.81048 3.86965 8.00096 4.24883 7.1862C4.28081 7.11816 4.41572 7.06175 4.50296 7.06117C5.90876 7.0538 7.31418 7.05497 8.71921 7.06466C8.77531 7.0717 8.82919 7.09098 8.87703 7.12112C8.92486 7.15127 8.96548 7.19155 8.99603 7.23912C9.19667 7.60318 9.38044 7.97769 9.55375 8.35629C9.83231 8.96168 10.1248 9.56243 10.358 10.1859C10.5034 10.5743 10.358 10.9488 10.0091 11.178C9.773 11.3321 9.49327 11.4315 9.22052 11.517C9.02046 11.5793 8.79947 11.5752 8.59069 11.6107C8.53893 11.6205 8.49649 11.6828 8.44996 11.7211C8.49754 11.7576 8.55 11.7871 8.60581 11.809C8.67286 11.8184 8.74078 11.82 8.80819 11.8136H12.9081C13.6543 11.8136 14.4004 11.8136 15.1471 11.809C15.2128 11.809 15.2786 11.7462 15.3443 11.7124C15.2906 11.6687 15.2321 11.6315 15.1698 11.6013ZM4.48203 6.68432L6.54887 2.23196L8.73957 6.68432H4.48203Z"
-                            fill="black" />
-                    </svg>
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M12.7375 8.66026C12.5171 10.3631 11.5901 11.482 9.98618 11.9751C7.62334 12.6986 5.27559 12.5689 3.05929 11.4709C0.926737 10.4136 -0.0514239 8.58408 0.00207889 6.21658C0.0398798 4.54462 0.649351 3.10062 1.8677 1.94159C2.61907 1.22686 3.53792 0.798838 4.51493 0.480729C6.57479 -0.190383 8.62884 -0.137462 10.6829 0.506317C10.9234 0.58036 11.1678 0.641128 11.415 0.688343C11.6878 0.742428 11.9024 0.648215 12.0676 0.414431C12.1321 0.323127 12.2461 0.267881 12.338 0.195768L12.4206 0.253924L12.5462 4.07472L12.4589 4.13288C12.3764 4.05844 12.2635 3.99912 12.2164 3.90666C12.0007 3.48445 11.8308 3.03782 11.5947 2.62724C10.7689 1.19371 9.56629 0.349297 7.86874 0.287071C5.73503 0.209724 4.2509 1.25594 3.29773 3.05643C2.22535 5.0843 2.22535 7.1965 3.22853 9.25636C3.85719 10.5491 4.96854 11.3063 6.35787 11.6442C7.3814 11.8931 8.41366 11.889 9.44359 11.6884C11.0463 11.3755 12.0635 10.4363 12.4496 8.83589C12.5037 8.61665 12.5101 8.61665 12.7375 8.66026Z"
-                            fill="black" />
-                    </svg>
-                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M6.75356 11.7229L6.69541 11.7869H5.79633C3.95513 11.7869 2.11355 11.7857 0.271581 11.7834C0.187837 11.7834 0.104104 11.7363 0.02036 11.7107C0.100614 11.6648 0.176212 11.5944 0.262863 11.577C0.451286 11.5363 0.649006 11.5351 0.836266 11.4921C1.68359 11.2955 2.12672 10.7744 2.19011 9.90384C2.21221 9.60434 2.22386 9.30368 2.22444 9.0036C2.22715 6.93909 2.22715 4.87457 2.22444 2.81006C2.22444 2.51929 2.21221 2.22851 2.19476 1.93773C2.13312 0.932811 1.60042 0.360563 0.602481 0.222153C0.458837 0.202381 0.311708 0.199473 0.169809 0.170977C0.108746 0.158764 0.0535028 0.102354 0 0.0657157C0.00988639 0.0441983 0.0191912 0.022099 0.0290776 0H6.72332C6.73321 0.027333 6.74368 0.0540858 6.75356 0.0814188C6.6826 0.120285 6.60825 0.152597 6.53142 0.177955C6.21215 0.250067 5.87717 0.27682 5.57302 0.388478C4.97461 0.608305 4.64252 1.06657 4.58029 1.70162C4.54715 2.02904 4.52214 2.35878 4.52214 2.68736C4.51671 4.82941 4.51671 6.97146 4.52214 9.11351C4.52214 9.36474 4.54598 9.61539 4.56226 9.86662C4.63845 11.0239 5.32585 11.4461 6.34066 11.5584C6.43837 11.5599 6.53572 11.5706 6.63143 11.5903C6.6797 11.6066 6.71285 11.6776 6.75356 11.7229Z"
-                            fill="black" />
-                    </svg>
-
-
+                    <div class="flex justify-center items-center pt-20 pb-4">
+                        <img src="{{ asset('assets/images/logo-vanaci.png') }}" alt="" class="w-24">
+                    </div>
                 </div>
             </div>
         </div>
@@ -181,6 +152,7 @@
             </button>
         </div>
 
+        {{-- Search version desktop --}}
         <div id="search-btn" class="hidden md:flex p-3 rounded-full transition-colors duration-300 cursor-pointer">
 
             <svg id="search-icon" class="w-40" viewBox="0 0 221 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -321,6 +293,8 @@
                     Your cart is empty.
                 </p>
 
+                
+
                 <h1 class="text-[20px] uppercase text-[#000] pt-10 px-4 text-center">What you may interest</h1>
                 <div class="grid grid-cols-2 items-stretch gap-2 px-4 py-10">
                     @forelse ($items as $item)
@@ -396,21 +370,21 @@
                                 <div>
                                     <button x-data="{ added: $store.favorite.items.some(i => i.id == '{{ $item->id }}') }"
                                         @click="
-                                                                                added = !added;
-                                                                                if (added) {
-                                                                                    $store.favorite.add({
-                                                                                        id: '{{ $item->id }}',
-                                                                                        name: '{{ $item->name }}',
-                                                                                        price: {{ $item->price }},
-                                                                                        image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
-                                                                                        discount: {{ $item->discount ?? 0 }},
-                                                                                        status: {{ $item->status ? 'true' : 'false' }},
-                                                                                        slug: '{{ $item->slug }}'
-                                                                                    });
-                                                                                } else {
-                                                                                    $store.cart.remove('{{ $item->id }}');
-                                                                                }
-                                                                            "
+                                            added = !added;
+                                            if (added) {
+                                                $store.favorite.add({
+                                                    id: '{{ $item->id }}',
+                                                    name: '{{ $item->name }}',
+                                                    price: {{ $item->price }},
+                                                    image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                                    discount: {{ $item->discount ?? 0 }},
+                                                    status: {{ $item->status ? 'true' : 'false' }},
+                                                    slug: '{{ $item->slug }}'
+                                                });
+                                            } else {
+                                                $store.cart.remove('{{ $item->id }}');
+                                            }
+                                        "
                                         class="w-[32px] h-[32px] flex items-center justify-center transition relative">
                                         <!-- Default Cart Icon -->
                                         <svg x-show="!added" x-cloak class="w-5 h-5 absolute inset-0 m-auto"
@@ -440,7 +414,6 @@
                 </div>
 
             </div>
-
             <!-- FAVORITE LIST -->
             <div x-show="tab === 'favorite'" class="flex-1 overflow-y-auto">
 
@@ -626,28 +599,156 @@
                 fill="black" />
         </svg>
     </a>
-
-    <div id="search-btn"
-        class="flex md:hidden p-3 rounded-full transition-colors duration-300 w-1/3 justify-end items-end">
-        <svg id="search-icon" class="w-6 h-6 cursor-pointer text-black" viewBox="0 0 22 22" fill="currentColor"
+    {{-- Button Search for version mobile phone --}}
+    <div id="search-btn-m" class="flex md:hidden p-3 rounded-full transition-colors duration-300 w-1/3 justify-end items-end">
+        <svg id="search-icon-m" class="w-6 h-6 cursor-pointer text-black" viewBox="0 0 22 22" fill="currentColor"
             xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M9.60721 1.90735e-05C4.31279 1.90735e-05 0 4.3128 0 9.60725C0 14.9017 4.31279 19.2228 9.60721 19.2228C11.8686 19.2228 13.9484 18.4303 15.5922 17.1145L19.594 21.1142C19.7959 21.3078 20.0656 21.4146 20.3454 21.4117C20.6251 21.4089 20.8926 21.2966 21.0905 21.0989C21.2885 20.9013 21.4012 20.634 21.4044 20.3542C21.4077 20.0745 21.3012 19.8046 21.1079 19.6024L17.1061 15.6006C18.4231 13.9543 19.2165 11.8713 19.2165 9.60725C19.2165 4.3128 14.9016 1.90735e-05 9.60721 1.90735e-05ZM9.60721 2.13545C13.7476 2.13545 17.079 5.46689 17.079 9.60725C17.079 13.7476 13.7476 17.0874 9.60721 17.0874C5.46685 17.0874 2.1354 13.7476 2.1354 9.60725C2.1354 5.46689 5.46685 2.13545 9.60721 2.13545Z" />
         </svg>
     </div>
+    {{-- Logo Vanaci --}}
     <div class="hidden md:flex justify-end items-end w-1/3">
         <img src="{{ asset('assets/images/logo-vanaci.png') }}" alt="" class="w-24">
     </div>
 
 </div>
 
+{{-- Search for Version desktop --}}
 <div id="search-section" x-data="searchComponent(
-    @js($items ?? []),
-    @js($types ?? []),
-    @js(request('type') ?? 'men'),
-    @js(request('filter') ?? '')
-)" data-items='@json($items ?? [])'
-    class="hidden fixed top-0 left-0 w-full h-full bg-white flex flex-col items-center overflow-y-auto z-40 mt-16">
+        @js($items ?? []),
+        @js($types ?? []),
+        @js(request('type') ?? 'men'),
+        @js(request('filter') ?? '')
+    )" data-items='@json($items ?? [])'
+        class="hidden fixed top-0 left-0 w-full h-full bg-white flex flex-col items-center overflow-y-auto z-40 mt-16">
+
+    <!-- 🔍 Search Input -->
+    <div class="w-full max-w-3xl text-center pb-2 px-2 my-6">
+        <input type="text" placeholder="WHAT ARE YOU LOOKING FOR?" x-model="query"
+            class="w-full text-center text-[13px] uppercase tracking-[2px] border-0 border-b border-gray-400 focus:ring-0 focus:border-black focus:outline-none" />
+    </div>
+
+    <!-- 🏷️ Type Filter -->
+    <div class="flex flex-wrap justify-center gap-6 mb-10 text-[#000]">
+        <template x-for="type in types" :key="type.id">
+            <button @click="selectType(type.slug)" :class="selectedType === type.slug ?
+                    'font-[700] border-b-2 border-black pb-1' :
+                    'font-[400] text-gray-700'"
+                class="uppercase text-[11px] tracking-[2px] hover:font-[700] transition">
+                <span x-text="type.type"></span>
+            </button>
+        </template>
+    </div>
+
+    <!-- 🛍️ Product Grid -->
+    <div class="w-full max-w-6xl px-6 mb-20">
+        <p class="text-[11px] uppercase tracking-[2px] text-gray-600 mb-6">
+            YOU MAY BE INTERESTED IN
+        </p>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-12">
+            <!-- 🧩 Product Card -->
+            <template x-for="item in filteredItems" :key="item.id">
+                <div class="border rounded overflow-hidden relative">
+                    <a :href="`/item/${item.slug}`" class="relative block">
+                        <img :src="item.image" :alt="item.name" class="w-full h-[300px] object-cover transition" />
+                        <template x-if="item.discount > 0">
+                            <span class="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-2 py-1 rounded"
+                                x-text="item.discount + '%'"></span>
+                        </template>
+                    </a>
+
+                    <div class="flex items-start justify-between p-2 mt-auto">
+                        <div>
+                            <div class="h-[20px]">
+                                <template x-if="item.status">
+                                    <p class="text-[14px] inline-block py-1 uppercase text-[#000]">New</p>
+                                </template>
+                            </div>
+
+                            <p class="text-[14px] uppercase py-1" x-text="item.name"></p>
+
+                            <p class="text-[14px] font-semibold">
+                                <template x-if="item.discount > 0">
+                                    <span>
+                                        <span class="text-[#000] font-semibold"
+                                            x-text="formatCurrency(item.price * (1 - item.discount / 100))"></span>
+                                        <span class="line-through text-gray-500 text-[14px] pl-2"
+                                            x-text="formatCurrency(item.price)"></span>
+                                    </span>
+                                </template>
+                                <template x-if="item.discount <= 0">
+                                    <span x-text="formatCurrency(item.price)"></span>
+                                </template>
+                            </p>
+                        </div>
+
+                        {{-- <div>
+                            <button x-data="{ added: $store.favorite.items.some(i => i.id == '{{ $item->id }}') }"
+                                @click="
+                                    added = !added;
+                                    if (added) {
+                                        $store.favorite.add({
+                                            id: '{{ $item->id }}',
+                                            name: '{{ $item->name }}',
+                                            price: {{ $item->price }},
+                                            image: '{{ $firstImage ? asset($firstImage) : asset('assets/images/default.jpg') }}',
+                                            discount: {{ $item->discount ?? 0 }},
+                                            status: {{ $item->status ? 'true' : 'false' }},
+                                            slug: '{{ $item->slug }}'
+                                        });
+                                    } else {
+                                        $store.cart.remove('{{ $item->id }}');
+                                    }
+                                " class="w-[32px] h-[32px] flex items-center justify-center transition relative">
+                                <!-- Default Cart Icon -->
+                                <svg x-show="!added" x-cloak class="w-5 h-5 absolute inset-0 m-auto" viewBox="0 0 6 7"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M1.17606 1.4942H0.779054C0.504719 1.4942 0.277003 1.70623 0.257429 1.97997L0.00132482 5.56605C-0.00898516 5.71083 0.0412178 5.85338 0.140134 5.95962C0.239199 6.06586 0.377713 6.12622 0.52295 6.12622H4.66248C4.80771 6.12622 4.94623 6.06586 5.04529 5.95962C5.14421 5.85338 5.19441 5.71083 5.1841 5.56605L4.928 1.97997C4.90842 1.70623 4.68071 1.4942 4.40637 1.4942H4.0122V1.41949C4.0122 0.635483 3.37672 0 2.59271 0C1.8374 0 1.13931 0.601565 1.17322 1.41949C1.17427 1.44429 1.17517 1.46925 1.17606 1.4942ZM4.0122 1.94246V3.06311C4.0122 3.18683 3.91179 3.28724 3.78807 3.28724C3.66435 3.28724 3.56394 3.18683 3.56394 3.06311V1.94246H1.62148V3.06311C1.62148 3.18683 1.52107 3.28724 1.39735 3.28724C1.27363 3.28724 1.17322 3.18683 1.17322 3.06311C1.17322 3.06311 1.19265 2.53939 1.18622 1.94246H0.779054C0.739906 1.94246 0.707334 1.97279 0.704645 2.01179L0.448386 5.59787C0.446891 5.61864 0.454067 5.63896 0.468262 5.6542C0.482457 5.66929 0.50218 5.67796 0.52295 5.67796H4.66248C4.68325 5.67796 4.70297 5.66929 4.71717 5.6542C4.73136 5.63896 4.73854 5.61864 4.73704 5.59787L4.48078 2.01179C4.47809 1.97279 4.44552 1.94246 4.40637 1.94246H4.0122ZM3.56394 1.4942V1.41949C3.56394 0.883072 3.12913 0.44826 2.59271 0.44826C2.0563 0.44826 1.62148 0.883072 1.62148 1.41949V1.4942H3.56394Z"
+                                        fill="black" />
+                                </svg>
+
+                                <!-- Added / Check Icon -->
+                                <svg x-show="added" x-cloak class="w-5 h-5 absolute inset-0 m-auto" viewBox="0 0 6 7"
+                                    fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M1.18056 1.49991H0.782031C0.506648 1.49991 0.278062 1.71275 0.258413 1.98753L0.00132988 5.58732C-0.0090195 5.73266 0.0413753 5.87575 0.140669 5.9824C0.240113 6.08904 0.379157 6.14963 0.524948 6.14963H4.6803C4.82609 6.14963 4.96513 6.08904 5.06458 5.9824C5.16387 5.87575 5.21427 5.73266 5.20392 5.58732L4.94683 1.98753C4.92718 1.71275 4.6986 1.49991 4.42321 1.49991H4.02754V1.42492C4.02754 0.637912 3.38963 0 2.60262 0C1.84442 0 1.14366 0.603864 1.17771 1.42492C1.17876 1.44981 1.17966 1.47486 1.18056 1.49991ZM3.57756 1.49991V1.42492C3.57756 0.886447 3.14109 0.449973 2.60262 0.449973C2.06416 0.449973 1.62768 0.886447 1.62768 1.42492V1.49991H3.57756Z"
+                                        fill="black" />
+                                </svg>
+                            </button>
+
+                        </div> --}}
+                    </div>
+                </div>
+            </template>
+
+            <!-- 🔄 Loading -->
+            <template x-if="loading">
+                <p class="col-span-full text-center text-gray-400 text-sm py-10 animate-pulse">
+                    Loading...
+                </p>
+            </template>
+
+            <!-- ❌ No Results -->
+            <template x-if="!loading && !filteredItems.length">
+                <p class="col-span-full text-center text-gray-500 text-sm py-10">
+                    No matching items found.
+                </p>
+            </template>
+
+        </div>
+    </div>
+</div>
+{{-- Search for version Mobile --}}
+<div id="search-section-m" x-data="searchComponent(
+        @js($items ?? []),
+        @js($types ?? []),
+        @js(request('type') ?? 'men'),
+        @js(request('filter') ?? '')
+    )" data-items='@json($items ?? [])'
+        class="hidden fixed top-0 left-0 w-full h-full bg-white flex flex-col items-center overflow-y-auto z-40 mt-16">
 
     <!-- 🔍 Search Input -->
     <div class="w-full max-w-3xl text-center pb-2 px-2 my-6">
@@ -921,16 +1022,19 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const hamburger = document.getElementById('hamburger');
         const drawer = document.getElementById('drawer');
         const closeDrawer = document.getElementById('closeDrawer');
+        // Desktop search
         const searchIcon = document.getElementById('search-icon');
         const searchSection = document.getElementById('search-section');
         const searchBtn = document.getElementById('search-btn');
-        const closeSearch = document.getElementById("close-search");
+        // Mobile Search
+        const searchIconM = document.getElementById('search-icon-m');
+        const searchSectionM = document.getElementById('search-section-m');
+        const searchBtnM = document.getElementById('search-btn-m');
         // 🧭 Drawer toggle
         if (hamburger && drawer && closeDrawer) {
             const hamburgerIcon = document.getElementById('hamburgerIcon');
@@ -960,7 +1064,7 @@
             });
         }
 
-        // 🔍 Toggle Search Section + Load Items
+        // 🔍 Toggle Search Section + Load Items Version Desktop
         if (searchIcon && searchSection && searchBtn) {
             searchIcon.addEventListener('click', async () => {
                 const isActive = !searchSection.classList.contains('hidden');
@@ -1003,6 +1107,61 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(text, 'text/html');
                         const dataAttr = doc.querySelector('#search-section')?.getAttribute(
+                            'data-items');
+                        const newItems = JSON.parse(dataAttr || '[]');
+                        alpineComp.items = newItems.map(formatItem);
+                        Alpine.flushAndStopDeferringMutations();
+                    } catch (err) {
+                        console.error('⚠️ Failed to load items:', err);
+                    } finally {
+                        alpineComp.isLoading = false;
+                    }
+                }
+            });
+        }
+        // 🔍 Toggle Search Section + Load Items Version Mobile
+        if (searchIconM && searchSectionM && searchBtnM) {
+            searchIconM.addEventListener('click', async () => {
+                const isActive = !searchSectionM.classList.contains('hidden');
+
+                // Toggle section visibility
+                searchSectionM.classList.toggle('hidden');
+
+                // Change background and icon color
+                if (!isActive) {
+                    searchBtnM.classList.add('bg-white');
+                    searchIconM.classList.replace('text-black', 'text-black');
+                } else {
+                    searchBtnM.classList.remove('bg-white');
+                    searchIconM.classList.replace('text-black', 'text-black');
+                }
+
+                // If opening, load items
+                if (!isActive) {
+                    const url = new URL(window.location);
+                    const currentType = url.searchParams.get('type');
+                    const currentFilter = url.searchParams.get('filter');
+
+                    if (!currentType || currentFilter === 'new') {
+                        url.pathname = '/item';
+                        url.searchParams.set('type', 'men');
+                        url.searchParams.delete('filter');
+                        window.history.pushState({}, '', url);
+                    }
+
+                    const alpineComp = Alpine.$data(searchSectionM);
+                    if (!alpineComp) return console.warn('⚠️ Alpine component not found.');
+
+                    alpineComp.selectedType = 'men';
+                    alpineComp.currentFilter = '';
+                    alpineComp.isLoading = true;
+
+                    try {
+                        const res = await fetch(`/item?type=men`);
+                        const text = await res.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'text/html');
+                        const dataAttr = doc.querySelector('#search-section-m')?.getAttribute(
                             'data-items');
                         const newItems = JSON.parse(dataAttr || '[]');
                         alpineComp.items = newItems.map(formatItem);

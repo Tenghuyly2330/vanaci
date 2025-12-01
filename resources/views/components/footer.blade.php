@@ -36,7 +36,7 @@
     <div class="text-[12px]">
         <h1 class="text-[15px] font-[600]">We are open</h1>
         <div class="relative top-[10px]">
-            <p>Time : 7:00am to 11:00pm</p>
+            <p>Time : 8:30am to 8:30pm</p>
             <p>Day : Everyday</p>
         </div>
     </div>
