@@ -122,7 +122,7 @@
             </div>
 
             <!-- LIGHTBOX POPUP -->
-            <div x-show="lightboxOpen" x-transition.opacity x-cloak
+            {{-- <div x-show="lightboxOpen" x-transition.opacity x-cloak
                 class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-center"
                 @click.self="closeLightbox()">
 
@@ -148,7 +148,72 @@
                                 @click="lightboxIndex = i">
                         </template>
                     </div>
-            </div>
+            </div> --}}
+            <div x-show="lightboxOpen" x-transition.opacity x-cloak
+    class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-center"
+    @click.self="closeLightbox()"
+    x-data="{
+        // Assuming your main Alpine data includes lightboxIndex, selectedColor, and closeLightbox()
+        // ... plus existing properties ...
+        updateIndexOnScroll(el) {
+            // Calculate the height of the container/viewport
+            const viewportHeight = el.clientHeight;
+            // Get the current scroll position
+            const scrollTop = el.scrollTop;
+            // Calculate the index of the image currently in the center of the viewport
+            // This assumes all images have the same height (viewportHeight) when visible.
+            const newIndex = Math.round(scrollTop / viewportHeight);
+            
+            // Only update if the index has changed to prevent infinite loops/excessive updates
+            if (newIndex !== this.lightboxIndex) {
+                this.lightboxIndex = newIndex;
+            }
+        },
+        // Function to scroll the main container when a thumbnail is clicked
+        scrollToImage(index) {
+            const container = this.$refs.imageContainer;
+            // Calculate the target scroll position (index * height of one image/viewport)
+            const scrollPosition = index * container.clientHeight;
+            container.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+
+            // Also scroll the thumbnail list to keep the active thumbnail visible
+            const thumbnail = this.$refs.lgThumbs.children[index];
+            if (thumbnail) {
+                thumbnail.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }">
+
+    <button @click="closeLightbox()" class="absolute top-4 z-20 right-4 lg:text-white text-black text-3xl">&times;</button>
+
+    <div x-ref="imageContainer"
+         class="lg:max-w-3xl xl:max-w-4xl mx-auto relative w-full h-full overflow-y-auto overflow-x-hidden snap-y snap-mandatory"
+         @scroll.debounce.100ms="updateIndexOnScroll($el)">
+        
+        <template x-for="(img, i) in selectedColor.images" :key="i">
+            <img :src="img"
+                 class="w-full flex-shrink-0 h-full object-cover lg:contain mb-4 snap-start"
+                 style="width: 100%; height: 100%;">
+        </template>
+    </div>
+    
+    <div class="absolute lg:hidden max-h-[70vh] left-4 bottom-4 flex flex-col gap-2 justify-start overflow-y-auto hide-scrollbar">
+        <template x-for="(img, i) in selectedColor.images" :key="i">
+            <img :src="img" class="w-14 h-14 object-cover border-2 cursor-pointer"
+                :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
+                @click="lightboxIndex = i; scrollToImage(i)">
+        </template>
+    </div>
+    
+    <div x-ref="lgThumbs" 
+         class="hidden lg:flex max-h-[70vh] absolute left-4 flex flex-col gap-2 justify-start items-center overflow-y-auto hide-scrollbar">
+        <template x-for="(img, i) in selectedColor.images" :key="i">
+            <img :src="img" class="lg:w-24 lg:h-24 xl:w-40 xl:h-40 space-y-4 object-cover border-2 cursor-pointer"
+                :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
+                @click="lightboxIndex = i; scrollToImage(i)">
+        </template>
+    </div>
+</div>
 
             <!-- ITEM DETAILS -->
             <div class="col-span-1 md:col-span-2">

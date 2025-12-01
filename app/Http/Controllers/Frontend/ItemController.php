@@ -106,7 +106,15 @@ class ItemController extends Controller
                 'color' => is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true),
             ];
         });
-
+        
+        // Check if the request is AJAX
+        if ($request->ajax()) {
+            // Return only the items grid and subcategory bar as a partial view
+            return response()->json([
+                'items_html' => view('frontend.partials.item_grid', compact('items', 'type', 'category', 'subcategory', 'subcategories'))->render(),
+                'categoryName' => $categoryName ?? $typeName, // Optional: for updating the banner text if needed
+            ]);
+        }
 
         return view('frontend.item', compact(
             'items',
@@ -207,4 +215,5 @@ class ItemController extends Controller
             'relatedItems'
         ));
     }
+
 }

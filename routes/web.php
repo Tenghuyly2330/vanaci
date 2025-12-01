@@ -20,6 +20,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
 Route::get('/item', [ItemController::class, 'index'])->name('item');
 Route::get('/item/{slug}', [ItemController::class, 'show'])->name('item.show');
+Route::get('/items/filter', [ItemController::class, 'filter'])->name('items.filter');
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('banner', BannerController::class)->except(['destroy', 'show']);
     Route::get('banner/delete/{banner}', [BannerController::class, 'delete'])->name('banner.delete');
+
 
 });
 
