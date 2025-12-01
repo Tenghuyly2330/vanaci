@@ -1,6 +1,16 @@
 @extends('layouts.master')
 
 @section('content')
+    <style>
+        /* Hide scrollbar for all browsers */
+        .hide-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;     /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+        display: none;             /* Chrome, Safari, Opera */
+        }
+    </style>
     <section class="px-4 py-10" x-data="{
         colors: {{ json_encode(is_array($item->color) ? $item->color : json_decode($item->color ?? '[]', true)) }},
         selectedColorIndex: 0,
@@ -113,16 +123,16 @@
 
             <!-- LIGHTBOX POPUP -->
             <div x-show="lightboxOpen" x-transition.opacity x-cloak
-                class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-centera"
+                class="fixed inset-0 z-50 bg-black/80 flex flex-col justify-center items-center"
                 @click.self="closeLightbox()">
 
-                <button @click="closeLightbox()" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+                <button @click="closeLightbox()" class="absolute top-4 z-20 right-4 lg:text-white text-black text-3xl">&times;</button>
 
-                <div class="lg:max-w-4xl mx-auto relative w-full h-full">
+                <div class="lg:max-w-3xl xl:max-w-4xl mx-auto relative w-full h-full">
                     <img :src="selectedColor.images[lightboxIndex]" class="w-full h-full object-cover lg:contain mb-4">
 
-                    <!-- Thumbnails -->
-                    <div class="absolute left-4 bottom-4 flex flex-col gap-2 justify-center overflow-x-auto">
+                    <!-- Thumbnails md down-->
+                    <div class="absolute lg:hidden  max-h-[70vh] left-4 bottom-4 flex flex-col gap-2 justify-start overflow-y-auto hide-scrollbar">
                         <template x-for="(img, i) in selectedColor.images" :key="i">
                             <img :src="img" class="w-14 h-14 object-cover border-2 cursor-pointer"
                                 :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
@@ -130,6 +140,14 @@
                         </template>
                     </div>
                 </div>
+                <!-- Thumbnails lg up-->
+                    <div class="hidden lg:flex max-h-[70vh] absolute left-4 flex flex-col gap-2 justify-start items-center overflow-y-auto hide-scrollbar">
+                        <template x-for="(img, i) in selectedColor.images" :key="i">
+                            <img :src="img" class="lg:w-24 lg:h-24 xl:w-40 xl:h-40 space-y-4 object-cover border-2 cursor-pointer"
+                                :class="i === lightboxIndex ? 'border-white' : 'border-gray-400'"
+                                @click="lightboxIndex = i">
+                        </template>
+                    </div>
             </div>
 
             <!-- ITEM DETAILS -->
